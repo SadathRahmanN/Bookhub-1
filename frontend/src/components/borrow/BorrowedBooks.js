@@ -1,17 +1,17 @@
-// src/components/dashboards/patron/BorrowedBooks.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './BorrowedBooks.css';
 
 const BorrowedBooks = () => {
   const [borrowedBooks, setBorrowedBooks] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchBorrowedBooks = async () => {
       try {
-        const response = await axios.get('/api/my-borrowed-books/', {
+        const response = await axios.get('http://127.0.0.1:8000/library/api/my-borrowed-books/', {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`,
           },
         });
         setBorrowedBooks(response.data);
@@ -21,7 +21,7 @@ const BorrowedBooks = () => {
     };
 
     fetchBorrowedBooks();
-  }, []);
+  }, [token]);
 
   return (
     <div className="borrowed-books-container">
@@ -32,8 +32,8 @@ const BorrowedBooks = () => {
             <div key={book.id} className="borrowed-book-card">
               <div className="borrowed-book-title">{book.title}</div>
               <div className="borrowed-book-details">
-                <p><span>Author:</span> {book.author}</p>
-                <p><span>Due Date:</span> {book.due_date}</p>
+                <p><strong>Author:</strong> {book.author}</p>
+                <p><strong>Due Date:</strong> {book.due_date}</p>
               </div>
             </div>
           ))}

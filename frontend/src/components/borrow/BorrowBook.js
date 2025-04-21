@@ -1,40 +1,46 @@
 import React, { useState } from 'react';
 import './BorrowBook.css';
 
-// Function to get CSRF Token from cookies
-const getCSRFToken = () => {
-  const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
-  return csrfToken;
-};
-
 const BorrowBook = () => {
   const [bookId, setBookId] = useState('');
   const [userId, setUserId] = useState('');
   const [message, setMessage] = useState('');
-  const [borrowId, setBorrowId] = useState(null); // to track existing record
+  const [borrowId, setBorrowId] = useState(null);
+
+  const token = localStorage.getItem('token');
 
   const handleFetchBorrow = async () => {
+    if (!bookId || !userId) {
+      setMessage('⚠️ Please enter both Book ID and User ID.');
+      return;
+    }
+
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/library/api/borrowed-books/?book_id=${bookId}&user_id=${userId}`
+        `http://127.0.0.1:8000/library/api/borrowed-books/?book_id=${bookId}&user_id=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const data = await response.json();
-      if (data && data.length > 0) {
-        const borrow = data[0];
-        setBorrowId(borrow.id);
-        setMessage(`ℹ️ Borrow record already exists. (ID: ${borrow.id})`);
+      if (data.length > 0) {
+        setBorrowId(data[0].id);
+        setMessage(`ℹ️ Borrow record already exists (ID: ${data[0].id})`);
       } else {
         setBorrowId(null);
         setMessage('✅ Book is available to lend to this user.');
       }
     } catch (error) {
-      console.error('Fetch error:', error);
-      setMessage('⚠️ Error checking borrow status.');
+      console.error('Error checking borrow status:', error);
+      setMessage('❌ Error checking borrow status.');
     }
   };
 
   const handleLendBook = async (e) => {
     e.preventDefault();
+
     if (!bookId.trim() || !userId.trim()) {
       setMessage('⚠️ Please provide both Book ID and User ID.');
       return;
@@ -46,17 +52,17 @@ const BorrowBook = () => {
       date: new Date().toISOString(),
     };
 
-    try {
-      const url = borrowId
-        ? `http://127.0.0.1:8000/library/api/borrowed-books/${borrowId}/`
-        : `http://127.0.0.1:8000/library/api/borrowed-books/`;
-      const method = borrowId ? 'PUT' : 'POST';
+    const url = borrowId
+      ? `http://127.0.0.1:8000/library/api/borrowed-books/${borrowId}/`
+      : `http://127.0.0.1:8000/library/api/borrowed-books/`;
+    const method = borrowId ? 'PUT' : 'POST';
 
+    try {
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': getCSRFToken(),  // Include CSRF token in headers
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -68,7 +74,7 @@ const BorrowBook = () => {
       setUserId('');
       setBorrowId(null);
     } catch (error) {
-      console.error('Submit error:', error);
+      console.error('Error lending book:', error);
       setMessage('❌ Error lending book.');
     }
   };

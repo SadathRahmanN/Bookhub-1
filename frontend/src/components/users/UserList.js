@@ -1,15 +1,14 @@
-// src/components/users/UserList.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserList.css';
+import { useNavigate } from 'react-router-dom';
 
-const UserList = () => {
+const UserList = ({ setUserToEdit }) => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  // Fetch all users on mount
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (!token) {
@@ -18,9 +17,7 @@ const UserList = () => {
     }
 
     axios.get('http://127.0.0.1:8000/api/users/', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: { Authorization: `Bearer ${token}` }
     })
     .then(res => setUsers(res.data))
     .catch(err => {
@@ -47,6 +44,11 @@ const UserList = () => {
     });
   };
 
+  const handleEdit = (user) => {
+    setUserToEdit(user);
+    navigate('/user-form');
+  };
+
   return (
     <div className="user-list-container">
       <h2>User List</h2>
@@ -58,7 +60,6 @@ const UserList = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-
       {filteredUsers.length === 0 ? (
         <p>No users found.</p>
       ) : (
@@ -80,12 +81,8 @@ const UserList = () => {
                 <td>{user.role}</td>
                 <td>{user.email}</td>
                 <td>
-                  <button
-                    onClick={() => handleDelete(user.id)}
-                    className="delete-button"
-                  >
-                    ❌ Delete
-                  </button>
+                  <button onClick={() => handleEdit(user)} className="edit-button">✏️ Edit</button>
+                  <button onClick={() => handleDelete(user.id)} className="delete-button">❌ Delete</button>
                 </td>
               </tr>
             ))}

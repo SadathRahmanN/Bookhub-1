@@ -1,5 +1,3 @@
-// src/components/books/BorrowHistory.js
-
 import React from 'react';
 import './BorrowHistory.css';
 
@@ -21,8 +19,8 @@ const BorrowHistory = ({ borrowList }) => {
           <tbody>
             {borrowList.map((entry, index) => (
               <tr key={index}>
-                <td>{entry.bookId}</td>
-                <td>{entry.userId}</td>
+                <td>{entry.book}</td>
+                <td>{entry.user}</td>
                 <td>{new Date(entry.date).toLocaleString()}</td>
               </tr>
             ))}
