@@ -1,6 +1,6 @@
 // src/components/Navbar.js
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
@@ -8,11 +8,23 @@ const Navbar = ({ setFormType }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // State to check if user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const isDashboard = location.pathname.includes('dashboard');
 
+  useEffect(() => {
+    // Check if there's a JWT token in localStorage (or you could use a context)
+    const token = localStorage.getItem('access_token');
+    setIsLoggedIn(!!token); // If token exists, set logged in state to true
+  }, []);
+
   const handleLogout = () => {
-    navigate('/');
-    if (setFormType) setFormType('home');
+    // Clear the JWT token and update state
+    localStorage.removeItem('access_token');
+    setIsLoggedIn(false);
+    navigate('/'); // Redirect to home after logout
+    if (setFormType) setFormType('home'); // Reset formType state to home
   };
 
   return (
@@ -40,7 +52,7 @@ const Navbar = ({ setFormType }) => {
 
       {/* Auth buttons or Logout */}
       <div className="auth-links">
-        {isDashboard ? (
+        {isLoggedIn ? (
           <button onClick={handleLogout} className="auth-button">Logout</button>
         ) : (
           <>
