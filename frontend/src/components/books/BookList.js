@@ -1,5 +1,3 @@
-// src/components/BookList.js
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './BookList.css';
@@ -11,18 +9,27 @@ const BookList = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalBooks, setTotalBooks] = useState(0);
+  const booksPerPage = 12; // Number of books to display per page
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [currentPage]);
 
   // Fetch books from the API
   const fetchBooks = async () => {
     try {
-      const { data } = await axios.get(`${API_BASE}/books/`);
-      if (Array.isArray(data)) {
-        setBooks(data);
+      const { data } = await axios.get(`${API_BASE}/books/`, {
+        params: {
+          page: currentPage, // Add page query parameter for pagination
+          per_page: booksPerPage, // Number of books per page
+        },
+      });
+      if (Array.isArray(data.books)) {
+        setBooks(data.books);
+        setTotalBooks(data.total); // Assuming the response includes the total count of books
       } else {
         setError('Unexpected response format from server.');
       }
@@ -61,6 +68,13 @@ const BookList = () => {
   const handleViewBook = (book) => {
     navigate('/book-details', { state: { book } });
   };
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const totalPages = Math.ceil(totalBooks / booksPerPage);
 
   return (
     <div className="book-list">
@@ -118,6 +132,16 @@ const BookList = () => {
           ))
         ) : (
           !loading && <p>No books available.</p>
+        )}
+      </div>
+
+      {/* Pagination controls */}
+      <div className="pagination">
+        {currentPage > 1 && (
+          <button onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
+        )}
+        {currentPage < totalPages && (
+          <button onClick={() => handlePageChange(currentPage + 1)}>Next</button>
         )}
       </div>
     </div>
