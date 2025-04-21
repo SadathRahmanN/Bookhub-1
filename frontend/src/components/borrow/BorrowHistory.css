@@ -1,0 +1,33 @@
+.history-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 95%;
+    max-width: 800px;
+    margin: 20px auto;
+    box-sizing: border-box;
+  }
+  
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+    color: black;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .history-table th,
+  .history-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .history-table th {
+    background-color: #343a40;
+    color: white;
+  }
+  
