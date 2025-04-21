@@ -174,3 +174,8 @@ function App() {
           <Route path="/update-profile" element={<UpdateProfile />} />
         </Routes>
       </div>
+    </Router>
+  );
+}
+
+export default App;
