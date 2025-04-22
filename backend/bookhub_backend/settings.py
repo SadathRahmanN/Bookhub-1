@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ru@bo51x)rr9!&9=1k%r%2qaxszr=jew#ytk8#65*a7r2mqyv*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bookhub-1-ni31.onrender.com','localhost']
 
 
 # Application definition
