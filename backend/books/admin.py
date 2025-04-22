@@ -9,11 +9,12 @@ class UserAdmin(admin.ModelAdmin):
     list_display = (
         'username', 'name', 'email', 'role', 'date_of_birth',
         'phone_number', 'address', 'profile_thumbnail',
-        'is_staff', 'is_superuser'
+        'is_active', 'is_staff', 'is_superuser'
     )
-    list_filter = ('role', 'is_staff', 'is_superuser')
+    list_filter = ('role', 'is_active', 'is_staff', 'is_superuser')
     search_fields = ('username', 'name', 'email', 'phone_number', 'address')
     readonly_fields = ('last_login', 'date_joined', 'profile_thumbnail')
+    actions = ['approve_users']
 
     fieldsets = (
         (None, {
@@ -45,6 +46,11 @@ class UserAdmin(admin.ModelAdmin):
         return "-"
     profile_thumbnail.short_description = "Profile Photo"
 
+    def approve_users(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"{updated} user(s) successfully approved.")
+    approve_users.short_description = "Approve selected inactive users"
+
 
 # Custom form for Book with calendar widget
 class BookForm(forms.ModelForm):
@@ -64,14 +70,14 @@ class BookAdmin(admin.ModelAdmin):
     form = BookForm
     list_display = (
         'title', 'author', 'publication_date',
-        'is_borrowed', 'borrowed_by'
+        'is_borrowed', 'borrowed_by_display'
     )
     list_filter = ('is_borrowed', 'publication_date')
     search_fields = ('title', 'author', 'publication_date')
 
-    def borrowed_by(self, obj):
+    def borrowed_by_display(self, obj):
         return obj.borrowed_by.username if obj.is_borrowed and obj.borrowed_by else "Not Borrowed"
-    borrowed_by.short_description = "Borrowed By"
+    borrowed_by_display.short_description = "Borrowed By"
 
 
 # BorrowedBook Admin

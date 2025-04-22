@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 # Custom User Model with roles, phone number, address, and name
 class User(AbstractUser):
@@ -16,8 +17,28 @@ class User(AbstractUser):
     address = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255, null=True, blank=True)
 
+    # New fields to support admin/librarian approval flow
+    approved_by = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='approved_users',
+        help_text='The admin or librarian who approved this user'
+    )
+    approved_at = models.DateTimeField(null=True, blank=True)
+
     def __str__(self):
         return f"{self.name or self.username} ({self.role})"
+
+    def approve(self, approver):
+        """
+        Marks the user as approved and sets approver and timestamp.
+        """
+        self.is_active = True
+        self.approved_by = approver
+        self.approved_at = timezone.now()
+        self.save()
 
 
 # Book model with extra fields
