@@ -3,6 +3,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
 
 urlpatterns = [
+    # Home
+    path('', views.api_home),
+
     # Book APIs
     path('books/', views.books_api),
     path('books/<int:book_id>/', views.get_book),
@@ -29,8 +32,8 @@ urlpatterns = [
     # Borrowed books
     path('borrow/', views.borrow_book),
     path('return/', views.return_book),
-    path('borrowed/', views.view_borrowed_books),
-    path('borrowed/all/', views.view_all_borrowed_books),
+    path('borrowed/', views.view_borrowed_books),           # Patron view
+    path('borrowed/all/', views.view_all_borrowed_books),   # Admin/Librarian view
 
     # Librarian approval
     path('librarians/pending/', views.list_pending_librarians),

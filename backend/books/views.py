@@ -9,18 +9,21 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from .models import Book, BorrowedBook
 from .serializers import BookSerializer, UserSerializer, BorrowedBookSerializer
+from django.http import JsonResponse
 
 User = get_user_model()
+
+# ========================= API HOME =========================
+
+def api_home(request):
+    return JsonResponse({"message": "BookHub API is running"})
 
 # ========================= BOOK VIEWS =========================
 
 @api_view(['GET'])
 def books_api(request):
     query = request.query_params.get('q', '')
-    if query:
-        books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query))
-    else:
-        books = Book.objects.all()
+    books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query)) if query else Book.objects.all()
     serializer = BookSerializer(books, many=True)
     return Response(serializer.data)
 
@@ -114,8 +117,6 @@ def login_signup_api(request):
 
     return Response({"message": "Invalid action."}, status=status.HTTP_400_BAD_REQUEST)
 
-# ========================= ROLE-BASED LOGIN =========================
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_with_role_redirect(request):
@@ -129,8 +130,8 @@ def login_with_role_redirect(request):
     if user:
         if not user.is_active:
             return Response({"message": "Your account is not approved yet."}, status=status.HTTP_403_FORBIDDEN)
-        redirect_url = f"/{user.role}/dashboard"
         refresh = RefreshToken.for_user(user)
+        redirect_url = f"/{user.role}/dashboard"
         return Response({
             "message": "Login successful!",
             "role": user.role,
@@ -179,10 +180,10 @@ def update_user(request, user_id):
 def delete_user(request, user_id):
     try:
         user = User.objects.get(id=user_id)
+        user.delete()
+        return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
     except User.DoesNotExist:
         return Response({"message": f"User with ID {user_id} not found."}, status=status.HTTP_404_NOT_FOUND)
-    user.delete()
-    return Response({"message": "User deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 # ========================= PENDING USERS APPROVAL =========================
 
@@ -202,13 +203,13 @@ def approve_user(request, user_id):
         return Response({"message": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
     try:
         user = User.objects.get(id=user_id, role__in=['client', 'patron'])
+        if user.is_active:
+            return Response({"message": "User is already approved."})
+        user.is_active = True
+        user.save()
+        return Response({"message": "User approved successfully."})
     except User.DoesNotExist:
         return Response({"message": f"User with ID {user_id} not found or not eligible for approval."}, status=status.HTTP_404_NOT_FOUND)
-    if user.is_active:
-        return Response({"message": "User is already approved."})
-    user.is_active = True
-    user.save()
-    return Response({"message": "User approved successfully."})
 
 # ========================= BORROWED BOOKS =========================
 
@@ -219,12 +220,12 @@ def borrow_book(request):
     book_id = request.data.get('book_id')
     try:
         book = Book.objects.get(id=book_id)
+        if BorrowedBook.objects.filter(user=user, book=book).exists():
+            return Response({"message": "You already borrowed this book."}, status=status.HTTP_400_BAD_REQUEST)
+        BorrowedBook.objects.create(user=user, book=book)
+        return Response({"message": "Book borrowed successfully."}, status=status.HTTP_201_CREATED)
     except Book.DoesNotExist:
         return Response({"message": f"Book with ID {book_id} not found."}, status=status.HTTP_404_NOT_FOUND)
-    if BorrowedBook.objects.filter(user=user, book=book).exists():
-        return Response({"message": "You already borrowed this book."}, status=status.HTTP_400_BAD_REQUEST)
-    BorrowedBook.objects.create(user=user, book=book)
-    return Response({"message": "Book borrowed successfully."}, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -233,10 +234,10 @@ def return_book(request):
     book_id = request.data.get('book_id')
     try:
         borrowed = BorrowedBook.objects.get(user=user, book__id=book_id)
+        borrowed.delete()
+        return Response({"message": "Book returned successfully."})
     except BorrowedBook.DoesNotExist:
         return Response({"message": "You haven't borrowed this book."}, status=status.HTTP_400_BAD_REQUEST)
-    borrowed.delete()
-    return Response({"message": "Book returned successfully."})
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -248,7 +249,7 @@ def view_borrowed_books(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def view_all_borrowed_books(request):
-    if request.user.role not in ('admin', 'librarian'):
+    if request.user.role not in ['admin', 'librarian']:
         return Response({"message": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
     borrowed_books = BorrowedBook.objects.all()
     serializer = BorrowedBookSerializer(borrowed_books, many=True)
@@ -268,10 +269,10 @@ def list_pending_librarians(request):
 def approve_librarian(request, user_id):
     try:
         librarian = User.objects.get(id=user_id, role='librarian')
+        if librarian.is_active:
+            return Response({"message": "Librarian already approved."})
+        librarian.is_active = True
+        librarian.save()
+        return Response({"message": "Librarian approved successfully."})
     except User.DoesNotExist:
         return Response({"message": f"Librarian with ID {user_id} not found."}, status=status.HTTP_404_NOT_FOUND)
-    if librarian.is_active:
-        return Response({"message": "Librarian already approved."})
-    librarian.is_active = True
-    librarian.save()
-    return Response({"message": "Librarian approved successfully."})

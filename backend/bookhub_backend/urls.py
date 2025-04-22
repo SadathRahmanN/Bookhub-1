@@ -16,11 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from books.views import api_home 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     # API routes for books and user management
     path('api/', include('books.urls')),  # API endpoints are now under '/api/'
+
+    path('', api_home),
 
 ]
