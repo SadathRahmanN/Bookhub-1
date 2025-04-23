@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { bookAPI } from '../../services/api'; // ✅ Correct import path
 import './BookForm.css';
 
 const BookForm = ({ bookToEdit }) => {
@@ -19,7 +20,7 @@ const BookForm = ({ bookToEdit }) => {
       setAuthor(bookToEdit.author || '');
       setGenre(bookToEdit.genre || '');
       setIsbn(bookToEdit.isbn || '');
-      setImagePreview(bookToEdit.image || '');
+      setImagePreview(bookToEdit.book_image_url || '');
     }
   }, [bookToEdit]);
 
@@ -42,15 +43,11 @@ const BookForm = ({ bookToEdit }) => {
     if (image) formData.append('image', image);
 
     try {
-      const response = await fetch(
-        bookToEdit ? `http://127.0.0.1:8000/library/api/books/${bookToEdit.id}/` : 'http://127.0.0.1:8000/library/api/books/',
-        {
-          method: bookToEdit ? 'PUT' : 'POST',
-          body: formData,
-        }
-      );
-
-      if (!response.ok) throw new Error('Failed to submit book data');
+      if (bookToEdit) {
+        await bookAPI.edit(bookToEdit.id, formData);
+      } else {
+        await bookAPI.add(formData);
+      }
 
       setTitle('');
       setAuthor('');
@@ -103,7 +100,13 @@ const BookForm = ({ bookToEdit }) => {
           onChange={handleImageChange}
         />
 
-        {imagePreview && <img src={imagePreview} alt="Preview" className="book-image-preview" />}
+        {imagePreview && (
+          <img
+            src={imagePreview}
+            alt="Preview"
+            className="book-image-preview"
+          />
+        )}
 
         <button type="submit">{bookToEdit ? 'Update Book' : 'Add Book'}</button>
       </form>
