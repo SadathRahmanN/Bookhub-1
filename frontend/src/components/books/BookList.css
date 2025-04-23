@@ -1,8 +1,7 @@
 .book-list {
   padding: 100px 20px 40px;
   color: #fff;
-  min-height: 100vh;
-  background: #111; /* solid dark background, not gradient */
+  min-height: 100vh; 
   padding-top: 80px;
 }
 
@@ -23,7 +22,7 @@
 
 /* Book card */
 .book-item {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(240, 222, 222, 0.08);
   color: #fff;
   padding: 20px;
   border-radius: 15px;
@@ -67,13 +66,13 @@
 .book-item h3 {
   font-size: 1.4rem;
   margin-bottom: 8px;
-  color: #ffffff;
+  color: #000000; /* Changed to black */
 }
 
 /* Author name */
 .book-item p {
   font-size: 1.1rem;
-  color: #cccccc;
+  color: #000000; /* Changed to black */
   margin-bottom: 10px;
 }
 
