@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { authAPI } from '../../service/api';
+import { authAPI } from '../../services/api';
 import './LoginForm.css'; // reuse same styles
 
 const SignUpForm = () => {

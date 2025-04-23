@@ -20,6 +20,16 @@ const Navbar = ({ setFormType }) => {
     if (setFormType) setFormType('home');
   };
 
+  // Scroll to section with offset for fixed navbar
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80; // Adjust this value based on your navbar height
+      const position = element.offsetTop - offset;
+      window.scrollTo({ top: position, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="top-navbar">
       {/* Left: Logo + Search */}
@@ -36,15 +46,21 @@ const Navbar = ({ setFormType }) => {
         </div>
       </div>
 
-      {/* Center: Nav links (only on home) */}
+      {/* Center: Nav links */}
       {!isDashboard && (
         <div className="nav-links">
-          <button className="nav-button" onClick={() => setFormType('home')}>
+          <button className="nav-button" onClick={() => scrollToSection('home')}>
             Home
           </button>
-          <button className="nav-button">Books</button>
-          <button className="nav-button">About Us</button>
-          <button className="nav-button">Contact Us</button>
+          <button className="nav-button" onClick={() => scrollToSection('books')}>
+            Books
+          </button>
+          <button className="nav-button" onClick={() => scrollToSection('about')}>
+            About Us
+          </button>
+          <button className="nav-button" onClick={() => scrollToSection('contact')}>
+            Contact Us
+          </button>
         </div>
       )}
 
