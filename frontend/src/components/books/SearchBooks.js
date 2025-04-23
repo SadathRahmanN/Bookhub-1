@@ -1,7 +1,6 @@
-// src/components/books/SearchBooks.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './SearchBooks.css';
+import { bookAPI } from '../../services/api'; // Import centralized API
 
 const SearchBooks = () => {
   const [books, setBooks] = useState([]);
@@ -10,29 +9,32 @@ const SearchBooks = () => {
 
   useEffect(() => {
     // Fetch books on initial load
-    axios.get('http://127.0.0.1:8000/library/api/books/')
-      .then((response) => {
-        setBooks(response.data);
-        setFilteredBooks(response.data);
-      })
-      .catch((error) => {
+    const fetchBooks = async () => {
+      try {
+        const { data } = await bookAPI.list(); // Fetch all books
+        setBooks(data.books || data);
+        setFilteredBooks(data.books || data);
+      } catch (error) {
         console.error('There was an error fetching the books!', error);
-      });
+      }
+    };
+
+    fetchBooks();
   }, []);
 
-  // Handle search query change
+  // Handle search input changes
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
-    // Filter books based on search query
     if (query === '') {
       setFilteredBooks(books);
     } else {
+      const lowerQuery = query.toLowerCase();
       setFilteredBooks(
         books.filter((book) =>
-          book.title.toLowerCase().includes(query.toLowerCase()) ||
-          book.author.toLowerCase().includes(query.toLowerCase())
+          book.title.toLowerCase().includes(lowerQuery) ||
+          book.author.toLowerCase().includes(lowerQuery)
         )
       );
     }
@@ -52,8 +54,12 @@ const SearchBooks = () => {
         {filteredBooks.length > 0 ? (
           filteredBooks.map((book) => (
             <div key={book.id} className="book-item">
-              {book.image_url ? (
-                <img src={book.image_url} alt={book.title} className="book-image" />
+              {book.book_image_url ? (
+                <img
+                  src={book.book_image_url}
+                  alt={book.title}
+                  className="book-image"
+                />
               ) : (
                 <div className="no-image">No Image</div>
               )}

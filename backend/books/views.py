@@ -21,11 +21,17 @@ def api_home(request):
 # ========================= BOOK VIEWS =========================
 
 @api_view(['GET'])
+@permission_classes([AllowAny])  # Optional: ensure it's accessible without auth
 def books_api(request):
     query = request.query_params.get('q', '')
-    books = Book.objects.filter(Q(title__icontains=query) | Q(author__icontains=query)) if query else Book.objects.all()
+    books = Book.objects.filter(
+        Q(title__icontains=query) | Q(author__icontains=query)
+    ) if query else Book.objects.all()
+
+    books = books[:12]  # MODIFIED: Limit to 12 books only
     serializer = BookSerializer(books, many=True)
     return Response(serializer.data)
+
 
 @api_view(['GET'])
 def get_book(request, book_id):
