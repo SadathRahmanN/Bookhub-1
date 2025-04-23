@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authAPI } from '../../services/api';
+import { authAPI } from '../../services/api'; // Assuming this is your API service
 import './LoginForm.css';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -16,6 +17,7 @@ const LoginForm = () => {
       return;
     }
     setError('');
+    setIsLoading(true);
 
     try {
       const response = await authAPI.loginSignup({
@@ -35,32 +37,51 @@ const LoginForm = () => {
       // Redirect to dashboard
       navigate(`/${data.role}-dashboard`);
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed. Please try again.';
+      const msg = err.response?.data?.message || 'Login failed. Please try again .';
       setError(msg);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="login-form">
+    <div className="auth-form">
       <h2>Login</h2>
+      {error && <div className="error-message">{error}</div>}
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-        {error && <div className="error">{error}</div>}
+        <div className="form-group">
+          <label>Username:</label>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Password:</label>
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
+      <div className="form-footer">
+        <a href="/forgot-password" className="link">Forgot password?</a>
+        <p>
+          Don't have an account?{' '}
+          <button onClick={() => navigate('/signup')} className="link">
+            Sign up here
+          </button>
+        </p>
+      </div>
     </div>
   );
 };
