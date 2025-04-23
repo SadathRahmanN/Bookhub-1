@@ -39,9 +39,7 @@ const AboutUs = () => (
 const ContactUs = () => (
   <div className="contact-us">
     <h2>Contact Us</h2>
-    <p>
-      Have questions or need support? Reach out via:
-    </p>
+    <p>Have questions or need support? Reach out via:</p>
     <div className="contact-details">
       <p>Email: <a href="mailto:support@bookhub.com">support@bookhub.com</a></p>
       <p>Phone: <a href="tel:+1234567890">+1 (234) 567-890</a></p>
@@ -51,11 +49,11 @@ const ContactUs = () => (
 );
 
 function App() {
-  const [formType, setFormType]       = useState('home');
-  const [users, setUsers]             = useState([]);
-  const [bookToEdit, setBookToEdit]   = useState(null);
-  const [userToEdit, setUserToEdit]   = useState(null);
-  const [borrowList, setBorrowList]   = useState([]);
+  const [formType, setFormType] = useState('home');
+  const [users, setUsers] = useState([]);
+  const [bookToEdit, setBookToEdit] = useState(null);
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [borrowList, setBorrowList] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
   const handleLogin = (user) => setLoggedInUser(user);
@@ -85,7 +83,6 @@ function App() {
         <Navbar setFormType={setFormType} />
 
         <Routes>
-          {/* Home & Sections */}
           <Route path={ROUTES.HOME} element={
             <>
               <div id="home" className="main-content">
@@ -114,22 +111,22 @@ function App() {
           <Route path={ROUTES.USER_LIST} element={<UserList users={users} onDelete={handleDeleteUser} setUserToEdit={setUserToEdit} />} />
 
           {/* Book Management */}
-          <Route path={ROUTES.BOOK_FORM}     element={<BookForm bookToEdit={bookToEdit} />} />
-          <Route path={ROUTES.BOOK_LIST}     element={<BookList />} />
-          <Route path={ROUTES.BORROW_BOOK}   element={<BorrowBook onBorrow={handleBorrowBook} />} />
-          <Route path={ROUTES.BORROW_HISTORY} element={<BorrowHistory borrowList={borrowList} />} />
-          <Route path={ROUTES.BORROWED_BOOKS} element={<BorrowedBooks loggedInUser={loggedInUser} />} />
+          <Route path={ROUTES.BOOK_FORM}       element={<BookForm bookToEdit={bookToEdit} />} />
+          <Route path={ROUTES.BOOK_LIST}       element={<BookList />} />
+          <Route path={ROUTES.BORROW_BOOK}     element={<BorrowBook onBorrow={handleBorrowBook} />} />
+          <Route path={ROUTES.BORROW_HISTORY}  element={<BorrowHistory borrowList={borrowList} />} />
+          <Route path={ROUTES.BORROWED_BOOKS}  element={<BorrowedBooks loggedInUser={loggedInUser} />} />
 
           {/* Approvals & Requests */}
-          <Route path={ROUTES.APPROVE_LIBRARIAN}       element={<ApproveLibrarian />} />
-          <Route path={ROUTES.APPROVE_CLIENT_PATRON}   element={<ApproveClientPatron />} />
-          <Route path={ROUTES.RETURN_REQUESTS}         element={<ReturnRequests />} />
-          <Route path={ROUTES.EXTENSION_REQUESTS}      element={<ExtensionRequests />} />
+          <Route path={ROUTES.APPROVE_LIBRARIAN}     element={<ApproveLibrarian />} />
+          <Route path={ROUTES.APPROVE_CLIENT_PATRON} element={<ApproveClientPatron />} />
+          <Route path={ROUTES.RETURN_REQUESTS}       element={<ReturnRequests />} />
+          <Route path={ROUTES.EXTENSION_REQUESTS}    element={<ExtensionRequests />} />
 
           {/* Shared & Extras */}
-          <Route path={ROUTES.ISSUED_BOOKS} element={<IssuedBooks />} />
-          <Route path={ROUTES.SEARCH_BOOKS} element={<SearchBooks />} />
-          <Route path={ROUTES.UPDATE_PROFILE} element={<UpdateProfile />} />
+          <Route path={ROUTES.ISSUED_BOOKS}     element={<IssuedBooks />} />
+          <Route path={ROUTES.SEARCH_BOOKS}     element={<SearchBooks />} />
+          <Route path={ROUTES.UPDATE_PROFILE}   element={<UpdateProfile />} />
         </Routes>
       </div>
     </Router>
