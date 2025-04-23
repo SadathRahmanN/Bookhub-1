@@ -1,7 +1,6 @@
-// src/components/SignUpForm.js
-
 import React, { useState } from 'react';
-import './LoginForm.css';
+import { authAPI } from '../../service/api';
+import './LoginForm.css'; // reuse same styles
 
 const SignUpForm = () => {
   const [formData, setFormData] = useState({
@@ -13,67 +12,53 @@ const SignUpForm = () => {
     address: '',
     userType: 'Client',
   });
-
   const [message, setMessage] = useState({ type: '', text: '' });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = e => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
-
-    const { username, email, password, phone, address } = formData;
+    const { username, email, password, phone, address, countryCode, userType } = formData;
 
     if (!username || !email || !password || !phone || !address) {
       setMessage({ type: 'error', text: 'Please fill in all required fields.' });
       return;
     }
+    setMessage({ type: '', text: '' });
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'signup', // Let the backend know it's a signup
-          username: formData.username,
-          email: formData.email,
-          password: formData.password,
-          phone: `${formData.countryCode}${formData.phone}`,
-          address: formData.address,
-          role: formData.userType.toLowerCase(), // match your backend role naming
-        }),
+      const response = await authAPI.loginSignup({
+        action: 'signup',
+        username,
+        email,
+        password,
+        phone: `${countryCode}${phone}`,
+        address,
+        role: userType.toLowerCase(),
       });
 
-      const data = await response.json();
+      setMessage({
+        type: 'success',
+        text: response.data.message || 'Signup successful. Awaiting approval.',
+      });
 
-      if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: data.message || 'Signup successful. Pending admin approval.',
-        });
-
-        // Optionally clear form
-        setFormData({
-          username: '',
-          email: '',
-          password: '',
-          countryCode: '+91',
-          phone: '',
-          address: '',
-          userType: 'Client',
-        });
-      } else {
-        setMessage({ type: 'error', text: data.message || 'Signup failed. Please try again.' });
-      }
-    } catch (error) {
-      console.error('Signup error:', error);
-      setMessage({ type: 'error', text: 'Something went wrong. Please try again later.' });
+      // reset form
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        countryCode: '+91',
+        phone: '',
+        address: '',
+        userType: 'Client',
+      });
+    } catch (err) {
+      setMessage({
+        type: 'error',
+        text: err.response?.data?.message || 'Signup failed. Please try again.',
+      });
     }
   };
 
@@ -82,25 +67,24 @@ const SignUpForm = () => {
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <input
-          type="text"
-          placeholder="Username"
           name="username"
+          placeholder="Username"
           value={formData.username}
           onChange={handleChange}
           required
         />
         <input
+          name="email"
           type="email"
           placeholder="Email"
-          name="email"
           value={formData.email}
           onChange={handleChange}
           required
         />
         <input
+          name="password"
           type="password"
           placeholder="Password"
-          name="password"
           value={formData.password}
           onChange={handleChange}
           required
@@ -108,11 +92,10 @@ const SignUpForm = () => {
 
         <div className="phone-row">
           <select
-            className="country-code-input"
             name="countryCode"
             value={formData.countryCode}
             onChange={handleChange}
-            required
+            className="country-code-input"
           >
             <option value="+91">🇮🇳 +91</option>
             <option value="+1">🇺🇸 +1</option>
@@ -121,10 +104,10 @@ const SignUpForm = () => {
             <option value="+971">🇦🇪 +971</option>
           </select>
           <input
-            type="tel"
-            className="phone-number-input"
-            placeholder="Phone Number"
             name="phone"
+            type="tel"
+            placeholder="Phone Number"
+            className="phone-number-input"
             value={formData.phone}
             onChange={handleChange}
             required
@@ -132,9 +115,8 @@ const SignUpForm = () => {
         </div>
 
         <input
-          type="text"
-          placeholder="Address"
           name="address"
+          placeholder="Address"
           value={formData.address}
           onChange={handleChange}
           required

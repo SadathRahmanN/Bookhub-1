@@ -29,7 +29,7 @@ const Navbar = ({ setFormType }) => {
         <div className="search-container">
           <input
             type="text"
-            placeholder="Search books or users..."
+            placeholder="Search books or authors..."
             className="search-input"
           />
           <button className="search-button">🔍</button>
