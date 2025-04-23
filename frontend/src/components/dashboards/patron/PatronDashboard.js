@@ -1,7 +1,7 @@
 // src/components/dashboards/PatronDashboard.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Dashboard.css';
+import '../Dashboard.css';
 
 const PatronDashboard = () => {
   const navigate = useNavigate();

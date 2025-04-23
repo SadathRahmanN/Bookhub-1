@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Dashboard.css';
+import '../Dashboard.css';
 
 const LibrarianDashboard = () => {
   const navigate = useNavigate();

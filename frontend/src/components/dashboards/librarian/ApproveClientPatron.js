@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Dashboard.css';
+import '../Dashboard.css';
 
 const ApproveClientPatron = () => {
   const [pendingUsers, setPendingUsers] = useState([]);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import './BookList.css';
 import { useNavigate } from 'react-router-dom';
@@ -11,25 +11,23 @@ const BookList = () => {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalBooks, setTotalBooks] = useState(0);
-  const booksPerPage = 12; // Number of books to display per page
+  const booksPerPage = 12;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchBooks();
-  }, [currentPage]);
-
   // Fetch books from the API
-  const fetchBooks = async () => {
+  const fetchBooks = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
       const { data } = await axios.get(`${API_BASE}/books/`, {
         params: {
-          page: currentPage, // Add page query parameter for pagination
-          per_page: booksPerPage, // Number of books per page
+          page: currentPage,
+          per_page: booksPerPage,
         },
       });
       if (Array.isArray(data.books)) {
         setBooks(data.books);
-        setTotalBooks(data.total); // Assuming the response includes the total count of books
+        setTotalBooks(data.total);
       } else {
         setError('Unexpected response format from server.');
       }
@@ -39,14 +37,16 @@ const BookList = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage]);
 
-  // Handle deleting a book
+  useEffect(() => {
+    fetchBooks();
+  }, [fetchBooks]);
+
   const handleDelete = async (bookId) => {
     if (!window.confirm('Are you sure you want to delete this book?')) return;
     try {
       await axios.delete(`${API_BASE}/books/delete/${bookId}/`);
-      // Refresh the list
       fetchBooks();
     } catch (err) {
       console.error('Error deleting book:', err);
@@ -54,22 +54,18 @@ const BookList = () => {
     }
   };
 
-  // Handle editing a book
   const handleEdit = (book) => {
     navigate('/book-form', { state: { bookToEdit: book } });
   };
 
-  // Handle borrowing a book
   const handleBorrowBook = (book) => {
     navigate('/borrow-book', { state: { bookToBorrow: book } });
   };
 
-  // Handle viewing a book's details
   const handleViewBook = (book) => {
     navigate('/book-details', { state: { book } });
   };
 
-  // Handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -103,30 +99,10 @@ const BookList = () => {
               <p><strong>ISBN:</strong> {book.isbn || 'N/A'}</p>
 
               <div className="book-actions">
-                <button
-                  className="edit-btn"
-                  onClick={() => handleEdit(book)}
-                >
-                  ✏️ Edit
-                </button>
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(book.id)}
-                >
-                  🗑️ Delete
-                </button>
-                <button
-                  className="view-btn"
-                  onClick={() => handleViewBook(book)}
-                >
-                  👁️ View
-                </button>
-                <button
-                  className="borrow-btn"
-                  onClick={() => handleBorrowBook(book)}
-                >
-                  📖 Borrow
-                </button>
+                <button className="edit-btn" onClick={() => handleEdit(book)}>✏️ Edit</button>
+                <button className="delete-btn" onClick={() => handleDelete(book.id)}>🗑️ Delete</button>
+                <button className="view-btn" onClick={() => handleViewBook(book)}>👁️ View</button>
+                <button className="borrow-btn" onClick={() => handleBorrowBook(book)}>📖 Borrow</button>
               </div>
             </div>
           ))
@@ -135,8 +111,8 @@ const BookList = () => {
         )}
       </div>
 
-      {/* Pagination controls */}
       <div className="pagination">
+        <span>Page {currentPage} of {totalPages}</span>
         {currentPage > 1 && (
           <button onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
         )}
