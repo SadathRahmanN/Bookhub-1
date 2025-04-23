@@ -1,3 +1,7 @@
+:root {
+  --navbar-height: 70px; /* Adjust based on your actual navbar height */
+}
+
 /* ======================
    Auth Form Container
    ====================== */
@@ -11,8 +15,19 @@
     margin: 2rem auto;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
+    margin: calc(var(--navbar-height) + 20px) auto 2rem; /* Top spacing */
+    padding: 40px 30px 30px; /* Increased top padding */
   }
   
+  /* Navbar Styling (add this if missing) */
+.top-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: var(--navbar-height);
+  z-index: 1000;
+}
+
   /* ======================
      Form Elements
      ====================== */
