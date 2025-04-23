@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from .models import Book, User, BorrowedBook
 
-# Book Serializer
+# ==================== BOOK SERIALIZER ====================
+
 class BookSerializer(serializers.ModelSerializer):
     book_image_url = serializers.SerializerMethodField()
 
@@ -20,7 +21,8 @@ class BookSerializer(serializers.ModelSerializer):
         return None
 
 
-# User Serializer
+# ==================== USER SERIALIZER ====================
+
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
 
@@ -40,7 +42,7 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         if password:
             user.set_password(password)
-        # Make sure new patrons/clients/librarians are inactive by default
+        # Make newly created users inactive by default (if necessary)
         if user.role in ['client', 'patron', 'librarian']:
             user.is_active = False
         user.save()
@@ -56,12 +58,12 @@ class UserSerializer(serializers.ModelSerializer):
         return instance
 
 
-# Borrowed Book Serializer
+# ==================== BORROWED BOOK SERIALIZER ====================
+
 class BorrowedBookSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
-    book = serializers.StringRelatedField()
+    user = UserSerializer(read_only=True)
+    book = BookSerializer(read_only=True)
     borrowed_at = serializers.DateTimeField(read_only=True)
-    returned = serializers.BooleanField()
     returned_at = serializers.DateTimeField(read_only=True)
 
     class Meta:

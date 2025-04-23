@@ -21,17 +21,16 @@ def api_home(request):
 # ========================= BOOK VIEWS =========================
 
 @api_view(['GET'])
-@permission_classes([AllowAny])  # Optional: ensure it's accessible without auth
+@permission_classes([AllowAny])
 def books_api(request):
     query = request.query_params.get('q', '')
     books = Book.objects.filter(
         Q(title__icontains=query) | Q(author__icontains=query)
     ) if query else Book.objects.all()
 
-    books = books[:12]  # MODIFIED: Limit to 12 books only
-    serializer = BookSerializer(books, many=True)
+    books = books[:12]  # Show only latest 12 books
+    serializer = BookSerializer(books, many=True, context={'request': request})
     return Response(serializer.data)
-
 
 @api_view(['GET'])
 def get_book(request, book_id):
@@ -39,7 +38,7 @@ def get_book(request, book_id):
         book = Book.objects.get(id=book_id)
     except Book.DoesNotExist:
         return Response({"message": f"Book with ID {book_id} not found."}, status=status.HTTP_404_NOT_FOUND)
-    serializer = BookSerializer(book)
+    serializer = BookSerializer(book, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['POST'])
@@ -47,7 +46,7 @@ def get_book(request, book_id):
 def add_book(request):
     if request.user.role not in ['admin', 'librarian']:
         return Response({"message": "Only admin or librarian can add books."}, status=status.HTTP_403_FORBIDDEN)
-    serializer = BookSerializer(data=request.data)
+    serializer = BookSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -62,7 +61,7 @@ def edit_book(request, book_id):
         book = Book.objects.get(id=book_id)
     except Book.DoesNotExist:
         return Response({"message": f"Book with ID {book_id} not found."}, status=status.HTTP_404_NOT_FOUND)
-    serializer = BookSerializer(book, data=request.data, partial=True)
+    serializer = BookSerializer(book, data=request.data, partial=True, context={'request': request})
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
@@ -191,7 +190,7 @@ def delete_user(request, user_id):
     except User.DoesNotExist:
         return Response({"message": f"User with ID {user_id} not found."}, status=status.HTTP_404_NOT_FOUND)
 
-# ========================= PENDING USERS APPROVAL =========================
+# ========================= USER APPROVAL =========================
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -249,7 +248,7 @@ def return_book(request):
 @permission_classes([IsAuthenticated])
 def view_borrowed_books(request):
     borrowed_books = BorrowedBook.objects.filter(user=request.user)
-    serializer = BorrowedBookSerializer(borrowed_books, many=True)
+    serializer = BorrowedBookSerializer(borrowed_books, many=True, context={'request': request})
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -258,7 +257,7 @@ def view_all_borrowed_books(request):
     if request.user.role not in ['admin', 'librarian']:
         return Response({"message": "Permission denied."}, status=status.HTTP_403_FORBIDDEN)
     borrowed_books = BorrowedBook.objects.all()
-    serializer = BorrowedBookSerializer(borrowed_books, many=True)
+    serializer = BorrowedBookSerializer(borrowed_books, many=True, context={'request': request})
     return Response(serializer.data)
 
 # ========================= PENDING LIBRARIANS =========================
