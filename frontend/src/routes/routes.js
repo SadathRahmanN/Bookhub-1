@@ -6,10 +6,11 @@ const ROUTES = {
   REDIRECT: '/redirect',
 
   // Dashboards
-  ADMIN_DASHBOARD: '/admin-dashboard',
-  CLIENT_DASHBOARD: '/client-dashboard',
-  PATRON_DASHBOARD: '/patron-dashboard',
-  LIBRARIAN_DASHBOARD: '/librarian-dashboard',
+  ADMIN_DASHBOARD: '/admin/dashboard',
+  CLIENT_DASHBOARD: '/client/dashboard',
+  PATRON_DASHBOARD: '/patron/dashboard',
+  LIBRARIAN_DASHBOARD: '/librarian/dashboard',
+  
 
   // User management
   USER_FORM: '/user-form',

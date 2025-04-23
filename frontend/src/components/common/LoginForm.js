@@ -35,7 +35,7 @@ const LoginForm = () => {
       localStorage.setItem('user_id', data.user_id);
 
       // Redirect to dashboard
-      navigate(`/${data.role}-dashboard`);
+      navigate(`/${data.role}/dashboard`);
     } catch (err) {
       const msg = err.response?.data?.message || 'Login failed. Please try again .';
       setError(msg);
