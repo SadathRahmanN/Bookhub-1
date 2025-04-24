@@ -1,50 +1,66 @@
 // src/service/api.js
 import axios from 'axios';
 
-const API_BASE = 'https://bookhub-1-ni31.onrender.com/api';  // Use your deployed backend URL here
+const API_BASE = 'https://bookhub-1-ni31.onrender.com/api'; // Use your deployed backend URL here
 
-const api = axios.create({ baseURL: API_BASE });
+const api = axios.create({
+  baseURL: API_BASE,
+});
+
+// Add an interceptor to automatically add the JWT token in the Authorization header for every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token'); // Get the token from localStorage
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`; // Attach token to request headers
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
 // ========================= BOOKS API =========================
 export const bookAPI = {
-  list: (params) => api.get('/books/', { params }),  // Get the list of books (with optional query params)
-  details: (id) => api.get(`/books/${id}/`),          // Get details of a single book by ID
-  add: (data) => api.post('/books/add/', data),       // Add a new book
-  edit: (id, data) => api.put(`/books/edit/${id}/`, data),  // Edit an existing book by ID
-  remove: (id) => api.delete(`/books/delete/${id}/`),  // Delete a book by ID
+  list: (params) => api.get('/books/', { params }),  // Get the list of books
+  details: (id) => api.get(`/books/${id}/`),  // Get book by ID
+  add: (formData) => api.post('/books/add/', formData, {  // Add a new book with image
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+  edit: (id, formData) => api.put(`/books/edit/${id}/`, formData, {  // Edit a book with image
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
+  remove: (id) => api.delete(`/books/delete/${id}/`),  // Delete a book
 };
 
 // ========================= AUTH API =========================
 export const authAPI = {
-  // Handles both login and signup
-  loginSignup: (data) => api.post('/auth/', data),         // User login/signup
-  roleLogin: (data) => api.post('/auth/role-login/', data), // Login with role-specific redirect
-  token: (data) => api.post('/token/', data),               // Get JWT token
-  refresh: (data) => api.post('/token/refresh/', data),     // Refresh JWT token
+  loginSignup: (data) => api.post('/auth/', data),
+  roleLogin: (data) => api.post('/auth/role-login/', data),
+  token: (data) => api.post('/token/', data),
+  refresh: (data) => api.post('/token/refresh/', data),
 };
 
 // ========================= USERS API =========================
 export const userAPI = {
-  list: () => api.get('/users/'),                          // Get the list of all users
-  get: (id) => api.get(`/users/${id}/`),                    // Get a specific user by ID
-  update: (id, data) => api.put(`/users/update/${id}/`, data),  // Update user data by ID
-  remove: (id) => api.delete(`/users/delete/${id}/`),      // Delete a user by ID
-  pending: () => api.get('/users/pending/'),               // Get list of pending users (awaiting approval)
-  approve: (id) => api.post(`/users/approve/${id}/`),      // Approve a pending user
+  list: () => api.get('/users/'),
+  get: (id) => api.get(`/users/${id}/`),
+  update: (id, data) => api.put(`/users/update/${id}/`, data),
+  remove: (id) => api.delete(`/users/delete/${id}/`),
+  pending: () => api.get('/users/pending/'),
+  approve: (id) => api.post(`/users/approve/${id}/`),
 };
 
 // ========================= LIBRARIANS API =========================
 export const librarianAPI = {
-  pending: () => api.get('/librarians/pending/'),  // Get list of pending librarians
-  approve: (id) => api.post(`/librarians/approve/${id}/`),  // Approve a pending librarian
+  pending: () => api.get('/librarians/pending/'),
+  approve: (id) => api.post(`/librarians/approve/${id}/`),
 };
 
 // ========================= BORROW API =========================
 export const borrowAPI = {
-  borrow: (data) => api.post('/borrow/', data),      // Borrow a book
-  return: (data) => api.post('/return/', data),      // Return a borrowed book
-  myList: () => api.get('/borrowed/'),               // Get the list of books currently borrowed by the logged-in user
-  allList: () => api.get('/borrowed/all/'),          // Get the list of all borrowed books (admin/librarian only)
+  borrow: (data) => api.post('/borrow/', data),
+  return: (data) => api.post('/return/', data),
+  myList: () => api.get('/borrowed/'),
+  allList: () => api.get('/borrowed/all/'),
 };
 
 export default api;
