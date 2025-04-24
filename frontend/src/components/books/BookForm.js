@@ -7,11 +7,11 @@ const BookForm = ({ bookToEdit }) => {
   const [author, setAuthor] = useState('');
   const [genre, setGenre] = useState('');
   const [isbn, setIsbn] = useState('');
-  const [publicationDate, setPublicationDate] = useState(''); // Added publicationDate state
+  const [publicationDate, setPublicationDate] = useState('');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [errors, setErrors] = useState({}); // Error state for form validation
-  const [successMessage, setSuccessMessage] = useState(''); // Success message state
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     if (bookToEdit) {
@@ -19,7 +19,7 @@ const BookForm = ({ bookToEdit }) => {
       setAuthor(bookToEdit.author || '');
       setGenre(bookToEdit.genre || '');
       setIsbn(bookToEdit.isbn || '');
-      setPublicationDate(bookToEdit.publication_date || ''); // Set publication date if editing
+      setPublicationDate(bookToEdit.publication_date || '');
       setImagePreview(bookToEdit.book_image_url || '');
     }
   }, [bookToEdit]);
@@ -41,37 +41,30 @@ const BookForm = ({ bookToEdit }) => {
       newErrors.image = 'Only JPEG and PNG images are allowed.';
     }
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Return false if there are errors
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return; // Prevent submission if validation fails
-    }
+    if (!validateForm()) return;
 
     const formData = new FormData();
     formData.append('title', title);
     formData.append('author', author);
-    formData.append('category', genre); // Note: category used in backend
+    formData.append('category', genre);
     formData.append('isbn', isbn);
-    formData.append('publication_date', publicationDate); // Add publication_date field to formData
-    if (image) formData.append('book_image', image); // must match backend field
-
-    console.log("Submitting book...");
-    for (let [key, val] of formData.entries()) {
-      console.log(`${key}: ${val}`);
-    }
+    formData.append('publication_date', publicationDate);
+    if (image) formData.append('book_image', image);
 
     try {
       if (bookToEdit) {
-        await bookAPI.edit(bookToEdit.id, formData); // Edit existing book
+        await bookAPI.edit(bookToEdit.id, formData);
       } else {
-        await bookAPI.add(formData); // Add new book
+        await bookAPI.add(formData);
       }
 
-      setSuccessMessage('Book added successfully!'); // Show success message after submission
+      setSuccessMessage('Book added successfully!');
       resetForm();
     } catch (error) {
       console.error('Error submitting book:', error.response?.data || error.message);
@@ -84,40 +77,42 @@ const BookForm = ({ bookToEdit }) => {
     setAuthor('');
     setGenre('');
     setIsbn('');
-    setPublicationDate(''); // Reset publication date
+    setPublicationDate('');
     setImage(null);
     setImagePreview(null);
-    setErrors({}); // Reset errors
+    setErrors({});
   };
 
   const handleCancel = () => {
-    resetForm(); // Reset form if cancel is clicked
+    resetForm();
   };
 
   return (
     <div className="book-form-container">
       <h2>{bookToEdit ? '📘 Edit Book' : '📚 Add New Book'}</h2>
       <form onSubmit={handleSubmit} className="book-form" encType="multipart/form-data">
-        <div className="form-field">
-          <input
-            type="text"
-            placeholder="Book Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          {errors.title && <span className="error-message">{errors.title}</span>}
-        </div>
-
-        <div className="form-field">
-          <input
-            type="text"
-            placeholder="Author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            required
-          />
-          {errors.author && <span className="error-message">{errors.author}</span>}
+        {/* Title & Author side-by-side */}
+        <div className="flex-row">
+          <div className="form-field">
+            <input
+              type="text"
+              placeholder="Book Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+            {errors.title && <span className="error-message">{errors.title}</span>}
+          </div>
+          <div className="form-field">
+            <input
+              type="text"
+              placeholder="Author"
+              value={author}
+              onChange={(e) => setAuthor(e.target.value)}
+              required
+            />
+            {errors.author && <span className="error-message">{errors.author}</span>}
+          </div>
         </div>
 
         <div className="form-field">
@@ -142,9 +137,8 @@ const BookForm = ({ bookToEdit }) => {
         <div className="form-field">
           <input
             type="date"
-            placeholder="Publication Date"
             value={publicationDate}
-            onChange={(e) => setPublicationDate(e.target.value)} // Handle publication date change
+            onChange={(e) => setPublicationDate(e.target.value)}
           />
         </div>
 
@@ -158,11 +152,7 @@ const BookForm = ({ bookToEdit }) => {
           />
           {errors.image && <span className="error-message">{errors.image}</span>}
           {imagePreview && (
-            <img
-              src={imagePreview}
-              alt="Preview"
-              className="book-image-preview"
-            />
+            <img src={imagePreview} alt="Preview" className="book-image-preview" />
           )}
         </div>
 
