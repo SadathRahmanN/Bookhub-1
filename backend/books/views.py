@@ -136,7 +136,7 @@ def login_with_role_redirect(request):
         if not user.is_active:
             return Response({"message": "Your account is not approved yet."}, status=status.HTTP_403_FORBIDDEN)
         refresh = RefreshToken.for_user(user)
-        redirect_url = f"/{user.role}/dashboard"
+        redirect_url = f"/{user.role}/dashboard"  # Custom redirect based on role
         return Response({
             "message": "Login successful!",
             "role": user.role,
@@ -216,6 +216,28 @@ def approve_user(request, user_id):
     except User.DoesNotExist:
         return Response({"message": f"User with ID {user_id} not found or not eligible for approval."}, status=status.HTTP_404_NOT_FOUND)
 
+# ========================= PENDING LIBRARIANS =========================
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def list_pending_librarians(request):
+    pending = User.objects.filter(role='librarian', is_active=False)
+    serializer = UserSerializer(pending, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def approve_librarian(request, user_id):
+    try:
+        librarian = User.objects.get(id=user_id, role='librarian')
+        if librarian.is_active:
+            return Response({"message": "Librarian already approved."})
+        librarian.is_active = True
+        librarian.save()
+        return Response({"message": "Librarian approved successfully."})
+    except User.DoesNotExist:
+        return Response({"message": f"Librarian with ID {user_id} not found."}, status=status.HTTP_404_NOT_FOUND)
+
 # ========================= BORROWED BOOKS =========================
 
 @api_view(['POST'])
@@ -259,25 +281,3 @@ def view_all_borrowed_books(request):
     borrowed_books = BorrowedBook.objects.all()
     serializer = BorrowedBookSerializer(borrowed_books, many=True, context={'request': request})
     return Response(serializer.data)
-
-# ========================= PENDING LIBRARIANS =========================
-
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def list_pending_librarians(request):
-    pending = User.objects.filter(role='librarian', is_active=False)
-    serializer = UserSerializer(pending, many=True)
-    return Response(serializer.data)
-
-@api_view(['POST'])
-@permission_classes([IsAdminUser])
-def approve_librarian(request, user_id):
-    try:
-        librarian = User.objects.get(id=user_id, role='librarian')
-        if librarian.is_active:
-            return Response({"message": "Librarian already approved."})
-        librarian.is_active = True
-        librarian.save()
-        return Response({"message": "Librarian approved successfully."})
-    except User.DoesNotExist:
-        return Response({"message": f"Librarian with ID {user_id} not found."}, status=status.HTTP_404_NOT_FOUND)
