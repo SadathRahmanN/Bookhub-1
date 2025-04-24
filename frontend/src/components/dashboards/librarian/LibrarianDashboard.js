@@ -8,10 +8,8 @@ const LibrarianDashboard = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => navigate('/');
-  const handleAddBook = () => navigate('/book-form');
-  const handleEditBook = () => navigate('/book-list');
-  const handleDeleteBook = () => navigate('/book-list');
-  const handleViewInventory = () => navigate('/book-list');
+  const handleAddBook = () => navigate('/book-form'); // Add Book page
+  const handleManageBooks = () => navigate('/book-list') //
   const handleApproveClientPatron = () => navigate('/approve-client-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');
   const handleManageReturnRequests = () => navigate('/return-requests');
@@ -25,9 +23,7 @@ const LibrarianDashboard = () => {
         <h2>📚 Librarian Dashboard</h2>
         <div className="button-grid">
           <button onClick={handleAddBook} className="dash-btn primary">📕 Add Book</button>
-          <button onClick={handleEditBook} className="dash-btn info">📖 Edit Book</button>
-          <button onClick={handleDeleteBook} className="dash-btn danger">📛 Delete Book</button>
-          <button onClick={handleViewInventory} className="dash-btn warning">📚 View Inventory</button>
+          <button onClick={handleManageBooks} className="dash-btn warning">📖 Manage Books</button>
           <button onClick={handleApproveClientPatron} className="dash-btn success">✅ Approve Client/Patron</button>
           <button onClick={handleManageBorrowedBooks} className="dash-btn primary">📚 Manage Borrowed Books</button>
           <button onClick={handleManageReturnRequests} className="dash-btn info">🔄 Manage Return Requests</button>

@@ -1,5 +1,3 @@
-// src/components/dashboards/AdminDashboard.js
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Dashboard.css'; // Assuming you have a CSS file for styling
@@ -8,13 +6,10 @@ const AdminDashboard = ({ setUserToEdit }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => navigate('/');
-  const handleAddUser = () => navigate('/user-form');
-  const handleEditUser = () => {
-    setUserToEdit(null);
-    navigate('/user-list');
-  };
-  const handleDeleteUser = () => navigate('/user-list');
-  const handleViewUsers = () => navigate('/user-list');
+  const handleManageUsers = () => navigate('/user-list');
+  const handleAddUser = () => navigate('/user-form');  // Add User page
+  const handleAddBook = () => navigate('/book-form'); // Add Book page
+  const handleManageBooks = () => navigate('/book-list') // Manage Books page
   const handleApproveLibrarian = () => navigate('/approve-librarian');
   const handleApproveClientPatron = () => navigate('/approve-client-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');
@@ -28,10 +23,15 @@ const AdminDashboard = ({ setUserToEdit }) => {
         <button className="logout-button" onClick={handleLogout}>🚪 Logout</button>
         <h2>👑 Admin Dashboard</h2>
         <div className="button-grid">
-          <button onClick={handleAddUser} className="dash-btn primary">➕ Add User</button>
-          <button onClick={handleEditUser} className="dash-btn info">📝 Edit User</button>
-          <button onClick={handleDeleteUser} className="dash-btn danger">❌ Delete User</button>
-          <button onClick={handleViewUsers} className="dash-btn warning">📜 View All Users</button>
+          {/* Manage Users Section */}
+          <button onClick={handleManageUsers} className="dash-btn primary">👥 Manage Users</button>
+          <button onClick={handleAddUser} className="dash-btn success">➕ Add User</button>
+
+          {/* Manage Books Section */}
+          <button onClick={handleAddBook} className="dash-btn success">📚 Add Book</button>
+          <button onClick={handleManageBooks} className="dash-btn warning">📖 Manage Books</button>
+
+          {/* Other Admin Actions */}
           <button onClick={handleApproveLibrarian} className="dash-btn success">✅ Approve Librarian</button>
           <button onClick={handleApproveClientPatron} className="dash-btn success">🧾 Approve Client/Patron</button>
           <button onClick={handleManageBorrowedBooks} className="dash-btn primary">📚 Manage Borrowed Books</button>
