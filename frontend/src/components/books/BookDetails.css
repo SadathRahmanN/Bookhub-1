@@ -1,0 +1,43 @@
+.book-details {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .book-details h2 {
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .book-details img {
+    display: block;
+    margin: 0 auto 1.5rem auto;
+    max-height: 300px;
+    object-fit: contain;
+  }
+  
+  .book-details .no-image {
+    text-align: center;
+    background-color: #eee;
+    color: #888;
+    padding: 100px 0;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  .book-details p {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #555;
+  }
+  
+  .book-details strong {
+    color: #000;
+  }
+  
