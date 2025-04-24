@@ -48,19 +48,23 @@
 .button-grid {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center; /* Center buttons vertically */
   gap: 1rem;
-  justify-content: center;
   margin-top: 1rem;
 }
 
 .dash-btn {
   padding: 12px 24px;
-  border-radius: 8px;
   font-size: 16px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: transform 0.2s;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  height: 50px; /* Fixed height for all buttons */
+  text-align: center;
 }
 
 .dash-btn:hover {
@@ -146,6 +150,7 @@
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  height: 50px;  /* Set fixed height for buttons inside the list */
 }
 
 .pending-list li button:hover {
