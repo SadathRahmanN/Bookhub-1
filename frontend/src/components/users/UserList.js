@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './UserList.css';
 import { useNavigate } from 'react-router-dom';
-import { userAPI } from '../../service/api'; // Adjust path based on file location
+import { userAPI } from '../../services/api'; // Adjust path based on file location
 
 const UserList = ({ setUserToEdit }) => {
   const [users, setUsers] = useState([]);
