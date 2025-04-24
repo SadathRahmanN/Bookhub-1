@@ -1,12 +1,12 @@
 /* Book Form Container */
 .book-form-container {
-  background: linear-gradient(to right, rgba(31, 64, 55, 0.9), rgba(153, 242, 200, 0.9));
+  background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black */
   color: #fff;
   padding: 40px 40px 80px 40px; /* Added 2cm padding-top */
   border-radius: 16px;
   width: 90%;
   max-width: 600px;
-  margin: 0px auto 30px;
+  margin: 100px auto 50px;
   text-align: center;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
