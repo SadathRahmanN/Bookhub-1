@@ -42,6 +42,25 @@ const BookList = () => {
     navigate('/book-details', { state: { book } });
   };
 
+  const handleBorrowBook = (book) => {
+    // Logic to borrow the book, for example, marking it as borrowed for the user.
+    alert(`You have borrowed: ${book.title}`);
+  };
+
+  const handleDeleteBook = async (bookId) => {
+    try {
+      await bookAPI.remove(bookId);
+      setBooks((prevBooks) => prevBooks.filter((book) => book.id !== bookId));
+    } catch (err) {
+      console.error('Error deleting book:', err);
+      setError('Failed to delete the book.');
+    }
+  };
+
+  const handleUpdateBook = (book) => {
+    navigate('/edit-book', { state: { book } });
+  };
+
   return (
     <div className="book-list">
       <h2>📚 {userRole === 'Admin' ? 'All Books' : 'Latest Books'}</h2>
@@ -64,9 +83,30 @@ const BookList = () => {
               )}
               <h3>{book.title}</h3>
               <p><strong>Author:</strong> {book.author}</p>
+
+              {/* View Button for All Users */}
               <button className="view-btn" onClick={() => handleViewBook(book)}>
                 👁️ View
               </button>
+
+              {/* Borrow Button for Patron Users */}
+              {userRole === 'Patron' && (
+                <button className="borrow-btn" onClick={() => handleBorrowBook(book)}>
+                  📚 Borrow
+                </button>
+              )}
+
+              {/* Delete and Update Buttons for Admin and Librarian */}
+              {(userRole === 'Admin' || userRole === 'Librarian') && (
+                <>
+                  <button className="update-btn" onClick={() => handleUpdateBook(book)}>
+                    ✏️ Update
+                  </button>
+                  <button className="delete-btn" onClick={() => handleDeleteBook(book.id)}>
+                    🗑️ Delete
+                  </button>
+                </>
+              )}
             </div>
           ))
         ) : (
