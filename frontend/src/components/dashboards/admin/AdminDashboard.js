@@ -5,11 +5,10 @@ import '../Dashboard.css'; // Assuming you have a CSS file for styling
 const AdminDashboard = ({ setUserToEdit }) => {
   const navigate = useNavigate();
 
-  const handleLogout = () => navigate('/');
   const handleManageUsers = () => navigate('/user-list');
   const handleAddUser = () => navigate('/user-form');  // Add User page
   const handleAddBook = () => navigate('/book-form'); // Add Book page
-  const handleManageBooks = () => navigate('/book-list') // Manage Books page
+  const handleManageBooks = () => navigate('/book-list'); // Manage Books page
   const handleApproveLibrarian = () => navigate('/approve-librarian');
   const handleApproveClientPatron = () => navigate('/approve-client-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');
@@ -20,7 +19,6 @@ const AdminDashboard = ({ setUserToEdit }) => {
   return (
     <div className="dashboard">
       <div className="dashboard-content">
-        <button className="logout-button" onClick={handleLogout}>🚪 Logout</button>
         <h2>👑 Admin Dashboard</h2>
         <div className="button-grid">
           {/* Manage Users Section */}

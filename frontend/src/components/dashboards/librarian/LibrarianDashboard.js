@@ -1,5 +1,3 @@
-// src/components/dashboards/LibrarianDashboard.js
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Dashboard.css';
@@ -7,9 +5,8 @@ import '../Dashboard.css';
 const LibrarianDashboard = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => navigate('/');
   const handleAddBook = () => navigate('/book-form'); // Add Book page
-  const handleManageBooks = () => navigate('/book-list') //
+  const handleManageBooks = () => navigate('/book-list'); // Manage Books page
   const handleApproveClientPatron = () => navigate('/approve-client-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');
   const handleManageReturnRequests = () => navigate('/return-requests');
@@ -19,10 +16,9 @@ const LibrarianDashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-content">
-        <button className="logout-button" onClick={handleLogout}>🚪 Logout</button>
         <h2>📚 Librarian Dashboard</h2>
         <div className="button-grid">
-        <button onClick={handleApproveClientPatron} className="dash-btn success">✅ Pending Client/Patron</button>
+          <button onClick={handleApproveClientPatron} className="dash-btn success">✅ Pending Client/Patron</button>
           <button onClick={handleAddBook} className="dash-btn primary">📕 Add Book</button>
           <button onClick={handleManageBooks} className="dash-btn warning">📖 Manage Books</button>
           <button onClick={handleManageBorrowedBooks} className="dash-btn primary">📚 Manage Borrowed Books</button>

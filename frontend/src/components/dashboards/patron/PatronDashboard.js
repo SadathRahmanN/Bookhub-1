@@ -1,4 +1,3 @@
-// src/components/dashboards/PatronDashboard.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Dashboard.css';
@@ -6,7 +5,6 @@ import '../Dashboard.css';
 const PatronDashboard = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => navigate('/');
   const handleViewBorrowedBooks = () => navigate('/borrowed-books');
   const handleRequestBookReturn = () => navigate('/return-request');
   const handleRequestBookExtension = () => navigate('/extension-request');
@@ -16,7 +14,6 @@ const PatronDashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-content">
-        <button className="logout-button" onClick={handleLogout}>🚪 Logout</button>
         <h2>📘 Patron Dashboard</h2>
         <div className="button-grid">
           <button onClick={handleSearchBooks} className="dash-btn primary">🔍 Search Books</button>
