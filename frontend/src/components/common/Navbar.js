@@ -8,11 +8,26 @@ const Navbar = ({ setFormType }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const isDashboard = location.pathname.includes('dashboard');
 
+  // This effect runs when the component mounts and on changes to localStorage
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     setIsLoggedIn(!!token);
-  }, []);
 
+    // Listen for changes in localStorage
+    const handleStorageChange = () => {
+      const token = localStorage.getItem('access_token');
+      setIsLoggedIn(!!token);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Cleanup the event listener on unmount
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []); // Only check on initial render and on localStorage changes
+
+  // Handle logout (clear token and update state)
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     setIsLoggedIn(false);
