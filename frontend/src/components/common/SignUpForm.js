@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { authAPI } from '../../services/api';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './SignUpForm.css'; // reuse same styles
 
 const SignUpForm = () => {
@@ -13,6 +14,7 @@ const SignUpForm = () => {
     userType: 'Client',
   });
   const [message, setMessage] = useState({ type: '', text: '' });
+  const navigate = useNavigate(); // Initialize navigate
 
   const handleChange = e => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -142,6 +144,13 @@ const SignUpForm = () => {
           </div>
         )}
       </form>
+
+      <p>
+        Already have an account?{' '}
+        <button onClick={() => navigate('/login')} className="link">
+          Login here
+        </button>
+      </p>
     </div>
   );
 };
