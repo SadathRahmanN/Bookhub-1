@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './UserForm.css';
+import { userAPI } from '../../services/api'; // Import the userAPI
 
 const UserForm = ({ userToEdit, onSubmit }) => {
   const [username, setUsername] = useState('');
@@ -8,8 +9,11 @@ const UserForm = ({ userToEdit, onSubmit }) => {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [role, setRole] = useState('client');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+  // Populate form fields if editing an existing user
   useEffect(() => {
     if (userToEdit) {
       setUsername(userToEdit.username || '');
@@ -19,36 +23,41 @@ const UserForm = ({ userToEdit, onSubmit }) => {
     }
   }, [userToEdit]);
 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    setErrorMessage('');
     const newUser = { username, email, password, phone, role };
 
-    try {
-      const response = await fetch(
-        userToEdit ? `/api/users/${userToEdit.id}/` : '/api/users/',
-        {
-          method: userToEdit ? 'PUT' : 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newUser),
-        }
-      );
+    // Basic client-side validation
+    if (!username || !email || !password) {
+      setErrorMessage('Username, Email, and Password are required.');
+      setIsLoading(false);
+      return;
+    }
 
-      if (!response.ok) {
+    try {
+      const response = await userAPI.update(userToEdit ? userToEdit.id : '', newUser); // Use userAPI.update for PUT request
+
+      if (response.status === 200) {
+        if (onSubmit) onSubmit(newUser);
+
+        // Reset form and navigate on success
+        setUsername('');
+        setEmail('');
+        setPassword('');
+        setPhone('');
+        setRole('client');
+        navigate('/admin-dashboard');
+      } else {
         throw new Error('Failed to submit user data');
       }
-
-      if (onSubmit) onSubmit(newUser);
-
-      setUsername('');
-      setEmail('');
-      setPassword('');
-      setPhone('');
-      setRole('client');
-      navigate('/admin-dashboard');
     } catch (error) {
       console.error('Error submitting user:', error);
+      setErrorMessage('An error occurred while submitting the data.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,6 +65,8 @@ const UserForm = ({ userToEdit, onSubmit }) => {
     <div className="update-profile">
       <h2>{userToEdit ? 'Edit User' : 'Add User'}</h2>
       <form onSubmit={handleSubmit}>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
         <div className="form-group">
           <label>Username</label>
           <input
@@ -97,10 +108,7 @@ const UserForm = ({ userToEdit, onSubmit }) => {
 
         <div className="form-group">
           <label>Role</label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="client">Client</option>
             <option value="patron">Patron</option>
             <option value="librarian">Librarian</option>
@@ -108,8 +116,8 @@ const UserForm = ({ userToEdit, onSubmit }) => {
           </select>
         </div>
 
-        <button type="submit" className="update-btn">
-          {userToEdit ? 'Update User' : 'Add User'}
+        <button type="submit" className="update-btn" disabled={isLoading}>
+          {isLoading ? 'Submitting...' : userToEdit ? 'Update User' : 'Add User'}
         </button>
       </form>
     </div>
