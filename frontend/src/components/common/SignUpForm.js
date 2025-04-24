@@ -90,6 +90,15 @@ const SignUpForm = () => {
           required
         />
 
+        {/* Move address field above phone number */}
+        <input
+          name="address"
+          placeholder="Address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+        />
+
         <div className="phone-row">
           <select
             name="countryCode"
@@ -113,14 +122,6 @@ const SignUpForm = () => {
             required
           />
         </div>
-
-        <input
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleChange}
-          required
-        />
 
         <select
           name="userType"
