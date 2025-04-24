@@ -1,6 +1,5 @@
-// src/components/users/UpdateProfile.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { userAPI } from '../../services/api'; // Adjust path based on your project structure
 import './UpdateProfile.css';
 
 const UpdateProfile = () => {
@@ -9,45 +8,51 @@ const UpdateProfile = () => {
     email: '',
     phone: '',
   });
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch user data (for demonstration purposes, we assume the user is already logged in)
-    const userId = 1; // Replace with actual user ID from context or props
-    axios.get(`http://127.0.0.1:8000/api/users/${userId}`)
-      .then((response) => {
-        setUser(response.data);
+    const userId = localStorage.getItem('user_id'); // Store user ID on login
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+
+    userAPI.get(userId)
+      .then((res) => {
+        setUser(res.data);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error('Error fetching user data', error);
+      .catch((err) => {
+        console.error('Error fetching user data', err);
         setLoading(false);
       });
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUser((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Update user profile
-    const userId = 1; // Replace with actual user ID
-    axios.put(`http://127.0.0.1:8000/api/users/${userId}`, user)
+    const userId = localStorage.getItem('user_id');
+    if (!userId) {
+      console.error('User ID not found');
+      return;
+    }
+
+    userAPI.update(userId, user)
       .then(() => {
         alert('Profile updated successfully!');
       })
-      .catch((error) => {
-        console.error('Error updating profile', error);
+      .catch((err) => {
+        console.error('Error updating profile', err);
       });
   };
 
   return (
     <div className="update-profile">
       <h2>👤 Update Profile</h2>
-
       {loading ? (
         <p>Loading user data...</p>
       ) : (
