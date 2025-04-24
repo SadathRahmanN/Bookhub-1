@@ -24,16 +24,16 @@ const AdminDashboard = ({ setUserToEdit }) => {
         <h2>👑 Admin Dashboard</h2>
         <div className="button-grid">
           {/* Manage Users Section */}
-          <button onClick={handleManageUsers} className="dash-btn primary">👥 Manage Users</button>
           <button onClick={handleAddUser} className="dash-btn success">➕ Add User</button>
+          <button onClick={handleManageUsers} className="dash-btn primary">👥 Manage Users</button>
+          <button onClick={handleApproveLibrarian} className="dash-btn success">✅ Pending Librarian</button>
+          <button onClick={handleApproveClientPatron} className="dash-btn success">🧾 Pending Client/Patron</button>
 
           {/* Manage Books Section */}
           <button onClick={handleAddBook} className="dash-btn success">📚 Add Book</button>
           <button onClick={handleManageBooks} className="dash-btn warning">📖 Manage Books</button>
 
           {/* Other Admin Actions */}
-          <button onClick={handleApproveLibrarian} className="dash-btn success">✅ Approve Librarian</button>
-          <button onClick={handleApproveClientPatron} className="dash-btn success">🧾 Approve Client/Patron</button>
           <button onClick={handleManageBorrowedBooks} className="dash-btn primary">📚 Manage Borrowed Books</button>
           <button onClick={handleManageReturnRequests} className="dash-btn info">🔄 Manage Return Requests</button>
           <button onClick={handleManageExtensionRequests} className="dash-btn warning">⏳ Manage Extension Requests</button>

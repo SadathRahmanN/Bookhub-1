@@ -22,9 +22,9 @@ const LibrarianDashboard = () => {
         <button className="logout-button" onClick={handleLogout}>🚪 Logout</button>
         <h2>📚 Librarian Dashboard</h2>
         <div className="button-grid">
+        <button onClick={handleApproveClientPatron} className="dash-btn success">✅ Pending Client/Patron</button>
           <button onClick={handleAddBook} className="dash-btn primary">📕 Add Book</button>
           <button onClick={handleManageBooks} className="dash-btn warning">📖 Manage Books</button>
-          <button onClick={handleApproveClientPatron} className="dash-btn success">✅ Approve Client/Patron</button>
           <button onClick={handleManageBorrowedBooks} className="dash-btn primary">📚 Manage Borrowed Books</button>
           <button onClick={handleManageReturnRequests} className="dash-btn info">🔄 Manage Return Requests</button>
           <button onClick={handleManageExtensionRequests} className="dash-btn warning">⏳ Manage Extension Requests</button>
