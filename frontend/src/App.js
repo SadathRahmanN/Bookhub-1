@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
 import ROUTES from './routes/routes';
 import Navbar from './components/common/Navbar';
 import QuoteSection from './components/common/QuoteSection';
