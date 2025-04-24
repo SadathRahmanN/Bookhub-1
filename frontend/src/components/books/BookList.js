@@ -17,7 +17,7 @@ const BookList = () => {
       setLoading(true);
       try {
         const { data } = await bookAPI.list(
-          userRole === 'Admin' ? {} : { page_size: 12 }
+          userRole === 'Admin' || userRole === 'Librarian' ? {} : { page_size: 12 }
         );
 
         if (Array.isArray(data.books)) {
@@ -63,7 +63,7 @@ const BookList = () => {
 
   return (
     <div className="book-list">
-      <h2>📚 {userRole === 'Admin' ? 'All Books' : 'Latest Books'}</h2>
+      <h2>📚 {userRole === 'Admin' || userRole === 'Librarian' ? 'All Books' : 'Latest Books'}</h2>
 
       {loading && <p>Loading books...</p>}
       {error && <p className="error">{error}</p>}
