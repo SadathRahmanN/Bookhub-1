@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import './UserList.css';
 import { useNavigate } from 'react-router-dom';
+import { userAPI } from '../../service/api'; // Adjust path based on file location
 
 const UserList = ({ setUserToEdit }) => {
   const [users, setUsers] = useState([]);
@@ -16,14 +16,12 @@ const UserList = ({ setUserToEdit }) => {
       return;
     }
 
-    axios.get('http://127.0.0.1:8000/api/users/', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => setUsers(res.data))
-    .catch(err => {
-      console.error(err);
-      setError('Failed to fetch users.');
-    });
+    userAPI.list()
+      .then(res => setUsers(res.data))
+      .catch(err => {
+        console.error(err);
+        setError('Failed to fetch users.');
+      });
   }, []);
 
   const filteredUsers = users.filter(user =>
@@ -33,15 +31,12 @@ const UserList = ({ setUserToEdit }) => {
   const handleDelete = (userId) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
 
-    const token = localStorage.getItem('access_token');
-    axios.delete(`http://127.0.0.1:8000/api/users/delete/${userId}/`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(() => setUsers(users.filter(u => u.id !== userId)))
-    .catch(err => {
-      console.error(err);
-      setError('Failed to delete user.');
-    });
+    userAPI.remove(userId)
+      .then(() => setUsers(users.filter(u => u.id !== userId)))
+      .catch(err => {
+        console.error(err);
+        setError('Failed to delete user.');
+      });
   };
 
   const handleEdit = (user) => {

@@ -1,17 +1,17 @@
 // src/service/api.js
 import axios from 'axios';
 
-const API_BASE = 'https://bookhub-1-ni31.onrender.com/api'; // Use your deployed backend URL here
+const API_BASE = 'https://bookhub-1-ni31.onrender.com/api'; // Deployed backend URL
 
 const api = axios.create({
   baseURL: API_BASE,
 });
 
-// Add an interceptor to automatically add the JWT token in the Authorization header for every request
+// Interceptor to attach JWT token to each request
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('access_token'); // Get the token from localStorage
+  const token = localStorage.getItem('access_token');
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`; // Attach token to request headers
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 }, (error) => {
@@ -20,15 +20,15 @@ api.interceptors.request.use((config) => {
 
 // ========================= BOOKS API =========================
 export const bookAPI = {
-  list: (params) => api.get('/books/', { params }),  // Get the list of books
-  details: (id) => api.get(`/books/${id}/`),  // Get book by ID
-  add: (formData) => api.post('/books/add/', formData, {  // Add a new book with image
+  list: (params) => api.get('/books/', { params }),
+  details: (id) => api.get(`/books/${id}/`),
+  add: (formData) => api.post('/books/add/', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
-  edit: (id, formData) => api.put(`/books/edit/${id}/`, formData, {  // Edit a book with image
+  edit: (id, formData) => api.put(`/books/edit/${id}/`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
-  remove: (id) => api.delete(`/books/delete/${id}/`),  // Delete a book
+  remove: (id) => api.delete(`/books/delete/${id}/`),
 };
 
 // ========================= AUTH API =========================
