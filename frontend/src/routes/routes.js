@@ -8,7 +8,6 @@ const ROUTES = {
   ADMIN_DASHBOARD: '/admin/dashboard',
   PATRON_DASHBOARD: '/patron/dashboard',
   LIBRARIAN_DASHBOARD: '/librarian/dashboard',
-  
 
   // User management
   USER_FORM: '/user-form',
@@ -37,6 +36,9 @@ const ROUTES = {
   // Additional Routes
   ABOUT_US: '/about-us',
   CONTACT_US: '/contact-us',
+
+  // Book details page (dynamic)
+  VIEW_BOOK: '/book/:id',  // Add this route for the BookDetails component
 };
 
 export default ROUTES;

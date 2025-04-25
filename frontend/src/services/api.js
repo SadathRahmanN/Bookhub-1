@@ -24,14 +24,14 @@ export const bookAPI = {
   list: (params) => api.get('/books/', { params }),                     // GET list of books (with optional search/filter params)
   details: (id) => api.get(`/books/${id}/`),                            // GET details of a book by ID
   add: (formData) =>
-    api.post('/books/add/', formData, {
+    api.post('/books/', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },              // POST a new book with image/file
     }),
   edit: (id, formData) =>
-    api.put(`/books/edit/${id}/`, formData, {
+    api.put(`/books/${id}/`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },              // PUT to update a book
     }),
-  remove: (id) => api.delete(`/books/delete/${id}/`),                  // DELETE a book by ID
+  remove: (id) => api.delete(`/books/${id}/`),                  // DELETE a book by ID
 };
 
 // ========================= AUTH API =========================
@@ -46,9 +46,9 @@ export const authAPI = {
 export const userAPI = {
   list: () => api.get('/users/'),                                      // GET list of users
   get: (id) => api.get(`/users/${id}/`),                               // GET user by ID
-  create: (data) => api.post('/users/create/', data),                 // POST create user
-  update: (id, data) => api.put(`/users/update/${id}/`, data),        // PUT update user
-  remove: (id) => api.delete(`/users/delete/${id}/`),                 // DELETE user
+  create: (data) => api.post('/users/', data),                         // POST create user
+  update: (id, data) => api.put(`/users/${id}/`, data),                // PUT update user
+  remove: (id) => api.delete(`/users/${id}/`),                         // DELETE user
   pending: () => api.get('/users/pending/'),                          // GET pending users
   approve: (id) => api.post(`/users/approve/${id}/`),                 // POST approve user
 };

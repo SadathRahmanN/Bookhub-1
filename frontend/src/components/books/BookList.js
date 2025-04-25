@@ -89,9 +89,7 @@ const BookList = () => {
               <h3>{book.title}</h3>
               <p>{book.author}</p>
               <div className="book-actions">
-                <button onClick={() => navigate(`/book/${book.id}`)}>
-                  View
-                </button>
+                {/* Remove the View button here as BookActions already has it */}
                 <BookActions
                   book={book}
                   userRole={userRole}
