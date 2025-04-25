@@ -9,7 +9,7 @@ import AdminDashboard from './components/dashboards/admin/AdminDashboard';
 import PatronDashboard from './components/dashboards/patron/PatronDashboard';
 import LibrarianDashboard from './components/dashboards/librarian/LibrarianDashboard';
 import ApproveLibrarian from './components/dashboards/admin/ApproveLibrarian';
-import ApproveClientPatron from './components/dashboards/librarian/ApproveClientPatron';
+import ApproveClientPatron from './components/dashboards/librarian/ApprovePatron';
 import BorrowBook from './components/books/borrow/BorrowBook';
 import BorrowHistory from './components/books/borrow/BorrowHistory';
 import BorrowedBooks from './components/books/borrow/BorrowedBooks';

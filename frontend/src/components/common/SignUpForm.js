@@ -131,7 +131,6 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         >
-          <option value="Client">Client</option>
           <option value="Patron">Patron</option>
           <option value="Librarian">Librarian</option>
         </select>

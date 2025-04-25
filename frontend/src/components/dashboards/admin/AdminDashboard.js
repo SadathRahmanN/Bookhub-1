@@ -10,7 +10,7 @@ const AdminDashboard = ({ setUserToEdit }) => {
   const handleAddBook = () => navigate('/book-form'); // Add Book page
   const handleManageBooks = () => navigate('/book-list'); // Manage Books page
   const handleApproveLibrarian = () => navigate('/approve-librarian');
-  const handleApproveClientPatron = () => navigate('/approve-client-patron');
+  const handleApprovePatron = () => navigate('/approve-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');
   const handleManageReturnRequests = () => navigate('/return-requests');
   const handleManageExtensionRequests = () => navigate('/extension-requests');
@@ -25,7 +25,7 @@ const AdminDashboard = ({ setUserToEdit }) => {
           <button onClick={handleAddUser} className="dash-btn success">➕ Add User</button>
           <button onClick={handleManageUsers} className="dash-btn primary">👥 Manage Users</button>
           <button onClick={handleApproveLibrarian} className="dash-btn success">✅ Pending Librarian</button>
-          <button onClick={handleApproveClientPatron} className="dash-btn success">🧾 Pending Client/Patron</button>
+          <button onClick={handleApprovePatron} className="dash-btn success">🧾 Pending Patron</button>
 
           {/* Manage Books Section */}
           <button onClick={handleAddBook} className="dash-btn success">📚 Add Book</button>
