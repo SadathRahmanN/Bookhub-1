@@ -2,54 +2,38 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { bookAPI } from '../../services/api';
 
-const BookActions = ({ book, userRole }) => {
+const BookActions = ({ book, userRole, refreshBooks }) => {
   const navigate = useNavigate();
 
-  const handleView = () => {
-    navigate(`/books/${book.id}`, { state: { book } }); // Navigate to details page
+  const handleBorrow = () => {
+    alert(`Borrowing ${book.title}`);
   };
 
-  const handleBorrow = async () => {
-    try {
-      // Call the API to borrow a book (you need an endpoint for this)
-      await bookAPI.borrow(book.id);
-      alert(`You have borrowed: ${book.title}`);
-    } catch (err) {
-      console.error('Error borrowing book:', err);
-      alert('Failed to borrow the book.');
-    }
-  };
-
-  const handleUpdate = () => {
-    navigate(`/books/edit/${book.id}`, { state: { book } }); // Navigate to edit page
+  const handleEdit = () => {
+    navigate(`/edit-book/${book.id}`);
   };
 
   const handleDelete = async () => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this book?');
-    if (confirmDelete) {
+    if (window.confirm(`Are you sure you want to delete "${book.title}"?`)) {
       try {
-        await bookAPI.remove(book.id);
-        alert('Book deleted successfully!');
-        window.location.reload(); // Or use state to refresh the list
+        await bookAPI.delete(book.id);
+        refreshBooks(); // Refresh book list after deletion
       } catch (err) {
-        console.error('Error deleting book:', err);
-        alert('Failed to delete the book.');
+        alert('Failed to delete book.');
       }
     }
   };
 
   return (
-    <div className="book-buttons">
-      <button className="view-btn" onClick={handleView}>👁️ View</button>
-
+    <div className="book-actions">
+      <button onClick={() => navigate(`/view-book/${book.id}`)}>View</button>
       {userRole === 'Patron' && (
-        <button className="borrow-btn" onClick={handleBorrow}>📚 Borrow</button>
+        <button onClick={handleBorrow}>Borrow</button>
       )}
-
       {(userRole === 'Admin' || userRole === 'Librarian') && (
         <>
-          <button className="update-btn" onClick={handleUpdate}>✏️ Update</button>
-          <button className="delete-btn" onClick={handleDelete}>🗑️ Delete</button>
+          <button onClick={handleEdit}>Update</button>
+          <button onClick={handleDelete}>Delete</button>
         </>
       )}
     </div>
