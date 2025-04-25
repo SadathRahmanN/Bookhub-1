@@ -69,7 +69,6 @@ function App() {
     if (!loggedInUser) return <Navigate to={ROUTES.HOME} />;
     switch (loggedInUser.role) {
       case 'Admin':     return <Navigate to={ROUTES.ADMIN_DASHBOARD} />;
-      case 'Client':    return <Navigate to={ROUTES.CLIENT_DASHBOARD} />;
       case 'Patron':    return <Navigate to={ROUTES.PATRON_DASHBOARD} />;
       case 'Librarian': return <Navigate to={ROUTES.LIBRARIAN_DASHBOARD} />;
       default:          return <Navigate to={ROUTES.HOME} />;
@@ -101,7 +100,6 @@ function App() {
 
           {/* Dashboards */}
           <Route path={ROUTES.ADMIN_DASHBOARD}     element={<AdminDashboard setUserToEdit={setUserToEdit} setBookToEdit={setBookToEdit} />} />
-          <Route path={ROUTES.CLIENT_DASHBOARD}    element={<div>Client Dashboard</div>} />
           <Route path={ROUTES.PATRON_DASHBOARD}    element={<PatronDashboard />} />
           <Route path={ROUTES.LIBRARIAN_DASHBOARD} element={<LibrarianDashboard />} />
 
@@ -118,7 +116,7 @@ function App() {
 
           {/* Approvals & Requests */}
           <Route path={ROUTES.APPROVE_LIBRARIAN}     element={<ApproveLibrarian />} />
-          <Route path={ROUTES.APPROVE_CLIENT_PATRON} element={<ApproveClientPatron />} />
+          <Route path={ROUTES.APPROVE_PATRON} element={<ApproveClientPatron />} />
           <Route path={ROUTES.RETURN_REQUESTS}       element={<ReturnRequests />} />
           <Route path={ROUTES.EXTENSION_REQUESTS}    element={<ExtensionRequests />} />
 

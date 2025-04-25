@@ -7,7 +7,6 @@ const ROUTES = {
 
   // Dashboards
   ADMIN_DASHBOARD: '/admin/dashboard',
-  CLIENT_DASHBOARD: '/client/dashboard',
   PATRON_DASHBOARD: '/patron/dashboard',
   LIBRARIAN_DASHBOARD: '/librarian/dashboard',
   

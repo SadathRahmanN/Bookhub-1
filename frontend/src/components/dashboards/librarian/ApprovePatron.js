@@ -1,4 +1,3 @@
-// src/components/dashboards/librarian/ApproveClientPatron.js
 import React, { useEffect, useState } from 'react';
 import { userAPI } from '../../../services/api';
 
@@ -20,7 +19,8 @@ const ApprovePatrons = () => {
     }
 
     try {
-      const { data } = await userAPI.getPendingPatrons(token);
+      // Using the correct API method: userAPI.pending()
+      const { data } = await userAPI.pending();
       const patronsOnly = data.filter(user => user.role === 'patron');
       setPendingPatrons(patronsOnly);
     } catch (err) {
@@ -36,7 +36,7 @@ const ApprovePatrons = () => {
     if (!token) return;
 
     try {
-      await userAPI.approveUser(id, token);
+      await userAPI.approve(id); // No need to pass token since it's already handled by the interceptor
       setPendingPatrons(prev => prev.filter(user => user.id !== id));
     } catch (err) {
       console.error('Error approving patron:', err);
