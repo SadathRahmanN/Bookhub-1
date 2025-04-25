@@ -9,7 +9,7 @@ import AdminDashboard from './components/dashboards/admin/AdminDashboard';
 import PatronDashboard from './components/dashboards/patron/PatronDashboard';
 import LibrarianDashboard from './components/dashboards/librarian/LibrarianDashboard';
 import ApproveLibrarian from './components/dashboards/admin/ApproveLibrarian';
-import ApproveClientPatron from './components/dashboards/librarian/ApprovePatron';
+import ApprovePatron from './components/dashboards/librarian/ApprovePatron';
 import BorrowBook from './components/books/borrow/BorrowBook';
 import BorrowHistory from './components/books/borrow/BorrowHistory';
 import BorrowedBooks from './components/books/borrow/BorrowedBooks';
@@ -68,10 +68,10 @@ function App() {
   const RedirectDashboard = () => {
     if (!loggedInUser) return <Navigate to={ROUTES.HOME} />;
     switch (loggedInUser.role) {
-      case 'Admin':     return <Navigate to={ROUTES.ADMIN_DASHBOARD} />;
-      case 'Patron':    return <Navigate to={ROUTES.PATRON_DASHBOARD} />;
+      case 'Admin': return <Navigate to={ROUTES.ADMIN_DASHBOARD} />;
+      case 'Patron': return <Navigate to={ROUTES.PATRON_DASHBOARD} />;
       case 'Librarian': return <Navigate to={ROUTES.LIBRARIAN_DASHBOARD} />;
-      default:          return <Navigate to={ROUTES.HOME} />;
+      default: return <Navigate to={ROUTES.HOME} />;
     }
   };
 
@@ -91,7 +91,7 @@ function App() {
               <div id="about" className="section"><AboutUs /></div>
               <div id="contact" className="section"><ContactUs /></div>
             </>
-          }/>
+          } />
 
           {/* Auth */}
           <Route path={ROUTES.LOGIN} element={<LoginForm onLogin={handleLogin} />} />
@@ -99,16 +99,24 @@ function App() {
           <Route path={ROUTES.REDIRECT} element={<RedirectDashboard />} />
 
           {/* Dashboards */}
-          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard setUserToEdit={setUserToEdit} setBookToEdit={setBookToEdit} />} />
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={
+            <AdminDashboard setUserToEdit={setUserToEdit} setBookToEdit={setBookToEdit} />
+          } />
           <Route path={ROUTES.PATRON_DASHBOARD} element={<PatronDashboard />} />
           <Route path={ROUTES.LIBRARIAN_DASHBOARD} element={<LibrarianDashboard />} />
 
           {/* User Management */}
-          <Route path={ROUTES.USER_FORM} element={<UserForm userToEdit={userToEdit} onSubmit={handleAddUser} />} />
-          <Route path={ROUTES.USER_LIST} element={<UserList users={users} onDelete={handleDeleteUser} setUserToEdit={setUserToEdit} />} />
+          <Route path={ROUTES.USER_FORM} element={
+            <UserForm userToEdit={userToEdit} onSubmit={handleAddUser} />
+          } />
+          <Route path={ROUTES.USER_LIST} element={
+            <UserList users={users} onDelete={handleDeleteUser} setUserToEdit={setUserToEdit} />
+          } />
 
           {/* Book Management */}
-          <Route path={ROUTES.BOOK_FORM} element={<BookForm bookToEdit={bookToEdit} />} />
+          <Route path={ROUTES.BOOK_FORM} element={
+            <BookForm bookToEdit={bookToEdit} onSuccess={() => setBookToEdit(null)} />
+          } />
           <Route path={ROUTES.BOOK_LIST} element={<BookList />} />
           <Route path={ROUTES.BORROW_BOOK} element={<BorrowBook onBorrow={handleBorrowBook} />} />
           <Route path={ROUTES.BORROW_HISTORY} element={<BorrowHistory borrowList={borrowList} />} />
@@ -116,7 +124,7 @@ function App() {
 
           {/* Approvals & Requests */}
           <Route path={ROUTES.APPROVE_LIBRARIAN} element={<ApproveLibrarian />} />
-          <Route path={ROUTES.APPROVE_PATRON} element={<ApproveClientPatron />} />
+          <Route path={ROUTES.APPROVE_PATRON} element={<ApprovePatron />} />
           <Route path={ROUTES.RETURN_REQUESTS} element={<ReturnRequests />} />
           <Route path={ROUTES.EXTENSION_REQUESTS} element={<ExtensionRequests />} />
 

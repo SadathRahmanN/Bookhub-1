@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { bookAPI } from '../../services/api';
+import { useParams, useNavigate } from 'react-router-dom';
 import './BookForm.css';
 
-const BookForm = ({ bookToEdit }) => {
+const BookForm = () => {
+  const { id } = useParams(); // Detect edit mode
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [genre, setGenre] = useState('');
@@ -14,15 +18,25 @@ const BookForm = ({ bookToEdit }) => {
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
-    if (bookToEdit) {
-      setTitle(bookToEdit.title || '');
-      setAuthor(bookToEdit.author || '');
-      setGenre(bookToEdit.genre || '');
-      setIsbn(bookToEdit.isbn || '');
-      setPublicationDate(bookToEdit.publication_date || '');
-      setImagePreview(bookToEdit.book_image_url || '');
+    if (id) {
+      const fetchBook = async () => {
+        try {
+          const response = await bookAPI.get(id);
+          const book = response.data;
+          setTitle(book.title || '');
+          setAuthor(book.author || '');
+          setGenre(book.genre || '');
+          setIsbn(book.isbn || '');
+          setPublicationDate(book.publication_date || '');
+          setImagePreview(book.book_image_url || '');
+        } catch (error) {
+          console.error('Error fetching book for editing:', error);
+          alert('Failed to load book data for editing.');
+        }
+      };
+      fetchBook();
     }
-  }, [bookToEdit]);
+  }, [id]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -34,42 +48,14 @@ const BookForm = ({ bookToEdit }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!title) newErrors.title = 'Title is required.';
-    if (!author) newErrors.author = 'Author is required.';
-    if (!isbn) newErrors.isbn = 'ISBN is required.';
+    if (!title.trim()) newErrors.title = 'Title is required.';
+    if (!author.trim()) newErrors.author = 'Author is required.';
+    if (!isbn.trim()) newErrors.isbn = 'ISBN is required.';
     if (image && !['image/jpeg', 'image/png'].includes(image.type)) {
       newErrors.image = 'Only JPEG and PNG images are allowed.';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('author', author);
-    formData.append('category', genre);
-    formData.append('isbn', isbn);
-    formData.append('publication_date', publicationDate);
-    if (image) formData.append('book_image', image);
-
-    try {
-      if (bookToEdit) {
-        await bookAPI.edit(bookToEdit.id, formData);
-      } else {
-        await bookAPI.add(formData);
-      }
-
-      setSuccessMessage('Book added successfully!');
-      resetForm();
-    } catch (error) {
-      console.error('Error submitting book:', error.response?.data || error.message);
-      alert('Failed to submit book. Check console for details.');
-    }
   };
 
   const resetForm = () => {
@@ -81,17 +67,49 @@ const BookForm = ({ bookToEdit }) => {
     setImage(null);
     setImagePreview(null);
     setErrors({});
+    setSuccessMessage('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('author', author);
+    formData.append('category', genre);
+    formData.append('isbn', isbn);
+    formData.append('publication_date', publicationDate);
+    if (image) formData.append('book_image', image);
+
+    try {
+      if (id) {
+        await bookAPI.edit(id, formData);
+        setSuccessMessage('Book updated successfully!');
+      } else {
+        await bookAPI.add(formData);
+        setSuccessMessage('Book added successfully!');
+        resetForm();
+      }
+
+      setTimeout(() => navigate('/'), 1000); // Go back after success
+    } catch (error) {
+      console.error('Error submitting book:', error.response?.data || error.message);
+      alert('Failed to submit book. Check console for details.');
+    }
   };
 
   const handleCancel = () => {
-    resetForm();
+    navigate('/');
   };
+
+  const formTitle = id ? '📘 Edit Book' : '📚 Add New Book';
+  const submitButtonLabel = id ? 'Update Book' : 'Add Book';
 
   return (
     <div className="book-form-container">
-      <h2>{bookToEdit ? '📘 Edit Book' : '📚 Add New Book'}</h2>
+      <h2>{formTitle}</h2>
       <form onSubmit={handleSubmit} className="book-form" encType="multipart/form-data">
-        {/* Title & Author side-by-side */}
         <div className="flex-row">
           <div className="form-field">
             <input
@@ -99,7 +117,6 @@ const BookForm = ({ bookToEdit }) => {
               placeholder="Book Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
             />
             {errors.title && <span className="error-message">{errors.title}</span>}
           </div>
@@ -109,7 +126,6 @@ const BookForm = ({ bookToEdit }) => {
               placeholder="Author"
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
-              required
             />
             {errors.author && <span className="error-message">{errors.author}</span>}
           </div>
@@ -157,15 +173,11 @@ const BookForm = ({ bookToEdit }) => {
         </div>
 
         <div className="form-buttons">
-          <button type="submit" className="submit-btn">
-            {bookToEdit ? 'Update Book' : 'Add Book'}
-          </button>
-          <button type="button" className="reset-btn" onClick={resetForm}>
-            Reset
-          </button>
-          <button type="button" className="cancel-btn" onClick={handleCancel}>
-            Cancel
-          </button>
+          <button type="submit" className="submit-btn">{submitButtonLabel}</button>
+          {!id && (
+            <button type="button" className="reset-btn" onClick={resetForm}>Reset</button>
+          )}
+          <button type="button" className="cancel-btn" onClick={handleCancel}>Cancel</button>
         </div>
       </form>
 

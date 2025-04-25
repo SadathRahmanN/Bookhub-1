@@ -58,7 +58,7 @@ const BookList = () => {
   }, [searchTerm, searchBooks]);
 
   const handleAddBook = () => {
-    navigate('/add-book');
+    navigate('/book-form');
   };
 
   if (loading) return <div>Loading books...</div>;
