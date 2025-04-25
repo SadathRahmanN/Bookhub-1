@@ -94,13 +94,13 @@ function App() {
           }/>
 
           {/* Auth */}
-          <Route path={ROUTES.LOGIN}   element={<LoginForm onLogin={handleLogin} />} />
-          <Route path={ROUTES.SIGNUP}  element={<SignUpForm />} />
+          <Route path={ROUTES.LOGIN} element={<LoginForm onLogin={handleLogin} />} />
+          <Route path={ROUTES.SIGNUP} element={<SignUpForm />} />
           <Route path={ROUTES.REDIRECT} element={<RedirectDashboard />} />
 
           {/* Dashboards */}
-          <Route path={ROUTES.ADMIN_DASHBOARD}     element={<AdminDashboard setUserToEdit={setUserToEdit} setBookToEdit={setBookToEdit} />} />
-          <Route path={ROUTES.PATRON_DASHBOARD}    element={<PatronDashboard />} />
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard setUserToEdit={setUserToEdit} setBookToEdit={setBookToEdit} />} />
+          <Route path={ROUTES.PATRON_DASHBOARD} element={<PatronDashboard />} />
           <Route path={ROUTES.LIBRARIAN_DASHBOARD} element={<LibrarianDashboard />} />
 
           {/* User Management */}
@@ -108,22 +108,22 @@ function App() {
           <Route path={ROUTES.USER_LIST} element={<UserList users={users} onDelete={handleDeleteUser} setUserToEdit={setUserToEdit} />} />
 
           {/* Book Management */}
-          <Route path={ROUTES.BOOK_FORM}       element={<BookForm bookToEdit={bookToEdit} />} />
-          <Route path={ROUTES.BOOK_LIST}       element={<BookList />} />
-          <Route path={ROUTES.BORROW_BOOK}     element={<BorrowBook onBorrow={handleBorrowBook} />} />
-          <Route path={ROUTES.BORROW_HISTORY}  element={<BorrowHistory borrowList={borrowList} />} />
-          <Route path={ROUTES.BORROWED_BOOKS}  element={<BorrowedBooks loggedInUser={loggedInUser} />} />
+          <Route path={ROUTES.BOOK_FORM} element={<BookForm bookToEdit={bookToEdit} />} />
+          <Route path={ROUTES.BOOK_LIST} element={<BookList />} />
+          <Route path={ROUTES.BORROW_BOOK} element={<BorrowBook onBorrow={handleBorrowBook} />} />
+          <Route path={ROUTES.BORROW_HISTORY} element={<BorrowHistory borrowList={borrowList} />} />
+          <Route path={ROUTES.BORROWED_BOOKS} element={<BorrowedBooks loggedInUser={loggedInUser} />} />
 
           {/* Approvals & Requests */}
-          <Route path={ROUTES.APPROVE_LIBRARIAN}     element={<ApproveLibrarian />} />
+          <Route path={ROUTES.APPROVE_LIBRARIAN} element={<ApproveLibrarian />} />
           <Route path={ROUTES.APPROVE_PATRON} element={<ApproveClientPatron />} />
-          <Route path={ROUTES.RETURN_REQUESTS}       element={<ReturnRequests />} />
-          <Route path={ROUTES.EXTENSION_REQUESTS}    element={<ExtensionRequests />} />
+          <Route path={ROUTES.RETURN_REQUESTS} element={<ReturnRequests />} />
+          <Route path={ROUTES.EXTENSION_REQUESTS} element={<ExtensionRequests />} />
 
           {/* Shared & Extras */}
-          <Route path={ROUTES.ISSUED_BOOKS}     element={<IssuedBooks />} />
-          <Route path={ROUTES.SEARCH_BOOKS}     element={<SearchBooks />} />
-          <Route path={ROUTES.UPDATE_PROFILE}   element={<UpdateProfile />} />
+          <Route path={ROUTES.ISSUED_BOOKS} element={<IssuedBooks />} />
+          <Route path={ROUTES.SEARCH_BOOKS} element={<SearchBooks />} />
+          <Route path={ROUTES.UPDATE_PROFILE} element={<UpdateProfile />} />
         </Routes>
       </div>
     </Router>
