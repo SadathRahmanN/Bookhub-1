@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
+from .views import UserCreateView  # Import UserCreateView
 
 urlpatterns = [
     # Home
@@ -20,10 +21,11 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # User management
-    path('users/', views.list_users),
-    path('users/<int:user_id>/', views.get_user),
-    path('users/update/<int:user_id>/', views.update_user),
-    path('users/delete/<int:user_id>/', views.delete_user),
+    path('users/', views.list_users),  # List all users
+    path('users/<int:user_id>/', views.get_user),  # Get specific user
+    path('users/update/<int:user_id>/', views.update_user),  # Update specific user
+    path('users/delete/<int:user_id>/', views.delete_user),  # Delete specific user
+    path('users/create/', UserCreateView.as_view(), name='user-create'),  # Create a new user
 
     # Pending users
     path('users/pending/', views.list_pending_users),

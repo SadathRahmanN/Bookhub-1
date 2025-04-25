@@ -1,4 +1,3 @@
-// src/service/api.js
 import axios from 'axios';
 
 const API_BASE = 'https://bookhub-1-ni31.onrender.com/api'; // Deployed backend URL
@@ -43,6 +42,7 @@ export const authAPI = {
 export const userAPI = {
   list: () => api.get('/users/'),
   get: (id) => api.get(`/users/${id}/`),
+  create: (data) => api.post('/users/', data), // Add the create method for user creation
   update: (id, data) => api.put(`/users/update/${id}/`, data),
   remove: (id) => api.delete(`/users/delete/${id}/`),
   pending: () => api.get('/users/pending/'),

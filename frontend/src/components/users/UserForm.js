@@ -38,9 +38,16 @@ const UserForm = ({ userToEdit, onSubmit }) => {
     }
 
     try {
-      const response = await userAPI.update(userToEdit ? userToEdit.id : '', newUser); // Use userAPI.update for PUT request
+      let response;
+      if (userToEdit) {
+        // Update user if editing
+        response = await userAPI.update(userToEdit.id, newUser); // Use the update API method for PUT request
+      } else {
+        // Create a new user if adding
+        response = await userAPI.create(newUser); // Assuming you have a `create` API method for POST request
+      }
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         if (onSubmit) onSubmit(newUser);
 
         // Reset form and navigate on success

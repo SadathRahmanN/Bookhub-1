@@ -1,14 +1,11 @@
-// src/components/dashboards/ApproveLibrarian.js
-
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { userAPI } from '../../../services/api';  // Importing userAPI
 import '../Dashboard.css';
-
-const API_BASE = 'http://127.0.0.1:8000/api';
 
 const ApproveLibrarian = () => {
   const [pendingLibrarians, setPendingLibrarians] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPendingLibrarians();
@@ -18,18 +15,20 @@ const ApproveLibrarian = () => {
     const token = localStorage.getItem('access_token');
     if (!token) {
       setError('You must be logged in to view pending librarians.');
+      setLoading(false);
       return;
     }
 
     try {
-      const { data } = await axios.get(
-        `${API_BASE}/pending-librarians/`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setPendingLibrarians(data);
+      // Using the correct API method: userAPI.pending()
+      const { data } = await userAPI.pending();
+      const librariansOnly = data.filter(user => user.role === 'librarian');
+      setPendingLibrarians(librariansOnly);
     } catch (err) {
       console.error('Error fetching pending librarians:', err);
       setError('Failed to fetch pending librarians.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,13 +37,8 @@ const ApproveLibrarian = () => {
     if (!token) return;
 
     try {
-      await axios.post(
-        `${API_BASE}/approve-librarian/${id}/`,
-        {},
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      // remove from list once approved
-      setPendingLibrarians((prev) => prev.filter((u) => u.id !== id));
+      await userAPI.approve(id); // Using the approve method from userAPI
+      setPendingLibrarians(prev => prev.filter(user => user.id !== id));
     } catch (err) {
       console.error('Error approving librarian:', err);
       setError('Failed to approve librarian.');
@@ -54,19 +48,18 @@ const ApproveLibrarian = () => {
   return (
     <div className="approve-librarian-container">
       <h2>✅ Approve Librarians</h2>
+
       {error && <p className="error">{error}</p>}
-      {pendingLibrarians.length === 0 ? (
+      {loading ? (
+        <p>Loading pending librarians...</p>
+      ) : pendingLibrarians.length === 0 ? (
         <p>No pending librarians.</p>
       ) : (
         <ul className="pending-list">
-          {pendingLibrarians.map((user) => (
+          {pendingLibrarians.map(user => (
             <li key={user.id}>
-              <span>
-                {user.username} — {user.email}
-              </span>
-              <button onClick={() => approveLibrarian(user.id)}>
-                Approve
-              </button>
+              <span>{user.username} - {user.email} ({user.role})</span>
+              <button onClick={() => approveLibrarian(user.id)}>Approve</button>
             </li>
           ))}
         </ul>

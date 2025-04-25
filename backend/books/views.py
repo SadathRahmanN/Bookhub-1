@@ -10,11 +10,11 @@ from django.db.models import Q
 from .models import Book, BorrowedBook
 from .serializers import BookSerializer, UserSerializer, BorrowedBookSerializer
 from django.http import JsonResponse
+from rest_framework.views import APIView
 
 User = get_user_model()
 
 # ========================= API HOME =========================
-
 def api_home(request):
     return JsonResponse({"message": "BookHub API is running"})
 
@@ -281,3 +281,14 @@ def view_all_borrowed_books(request):
     borrowed_books = BorrowedBook.objects.all()
     serializer = BorrowedBookSerializer(borrowed_books, many=True, context={'request': request})
     return Response(serializer.data)
+
+# ========================= USER CREATE VIEW =========================
+
+class UserCreateView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Create the user logic
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # Create the user
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
