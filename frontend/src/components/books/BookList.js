@@ -27,19 +27,35 @@ const BookList = () => {
     }
   }, [userRole]);
 
+  const searchBooks = useCallback(async () => {
+    try {
+      if (!searchTerm.trim()) {
+        fetchBooks();
+        return;
+      }
+      const response = await bookAPI.searchBooks(searchTerm);
+      setBooks(response.data);
+    } catch (err) {
+      setError('Failed to search books.');
+    }
+  }, [searchTerm, fetchBooks]);
+
   useEffect(() => {
     fetchBooks();
   }, [fetchBooks]);
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value;
+    setSearchTerm(value);
   };
 
-  const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.isbn?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      searchBooks();
+    }, 400); // Debounce search
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm, searchBooks]);
 
   const handleAddBook = () => {
     navigate('/add-book');
@@ -63,20 +79,25 @@ const BookList = () => {
         )}
       </div>
 
-      {filteredBooks.length === 0 ? (
+      {books.length === 0 ? (
         <div>No books found.</div>
       ) : (
         <div className="book-grid">
-          {filteredBooks.map((book) => (
+          {books.map((book) => (
             <div key={book.id} className="book-card">
               <img src={book.image} alt={book.title} />
               <h3>{book.title}</h3>
               <p>{book.author}</p>
-              <BookActions
-                book={book}
-                userRole={userRole}
-                refreshBooks={fetchBooks}
-              />
+              <div className="book-actions">
+                <button onClick={() => navigate(`/book/${book.id}`)}>
+                  View
+                </button>
+                <BookActions
+                  book={book}
+                  userRole={userRole}
+                  refreshBooks={fetchBooks}
+                />
+              </div>
             </div>
           ))}
         </div>
