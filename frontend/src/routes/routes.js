@@ -1,4 +1,3 @@
-// src/routes/routes.js
 const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
@@ -34,6 +33,10 @@ const ROUTES = {
   ISSUED_BOOKS: '/issued-books',
   SEARCH_BOOKS: '/search-books',
   UPDATE_PROFILE: '/update-profile',
+
+  // Additional Routes
+  ABOUT_US: '/about-us',
+  CONTACT_US: '/contact-us',
 };
 
 export default ROUTES;

@@ -6,24 +6,35 @@ const BookActions = ({ book, userRole }) => {
   const navigate = useNavigate();
 
   const handleView = () => {
-    navigate('/book-details', { state: { book } });
+    navigate(`/books/${book.id}`, { state: { book } }); // Navigate to details page
   };
 
-  const handleBorrow = () => {
-    alert(`You have borrowed: ${book.title}`);
+  const handleBorrow = async () => {
+    try {
+      // Call the API to borrow a book (you need an endpoint for this)
+      await bookAPI.borrow(book.id);
+      alert(`You have borrowed: ${book.title}`);
+    } catch (err) {
+      console.error('Error borrowing book:', err);
+      alert('Failed to borrow the book.');
+    }
   };
 
   const handleUpdate = () => {
-    navigate('/edit-book', { state: { book } });
+    navigate(`/books/edit/${book.id}`, { state: { book } }); // Navigate to edit page
   };
 
   const handleDelete = async () => {
-    try {
-      await bookAPI.remove(book.id);
-      window.location.reload(); // You can use state instead for a better experience
-    } catch (err) {
-      console.error('Error deleting book:', err);
-      alert('Failed to delete the book.');
+    const confirmDelete = window.confirm('Are you sure you want to delete this book?');
+    if (confirmDelete) {
+      try {
+        await bookAPI.remove(book.id);
+        alert('Book deleted successfully!');
+        window.location.reload(); // Or use state to refresh the list
+      } catch (err) {
+        console.error('Error deleting book:', err);
+        alert('Failed to delete the book.');
+      }
     }
   };
 
