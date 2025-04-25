@@ -7,7 +7,7 @@ const LibrarianDashboard = () => {
 
   const handleAddBook = () => navigate('/book-form'); // Add Book page
   const handleManageBooks = () => navigate('/book-list'); // Manage Books page
-  const handleApproveClientPatron = () => navigate('/approve-client-patron');
+  const handleApprovePatron = () => navigate('/approve-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');
   const handleManageReturnRequests = () => navigate('/return-requests');
   const handleManageExtensionRequests = () => navigate('/extension-requests');
@@ -18,7 +18,7 @@ const LibrarianDashboard = () => {
       <div className="dashboard-content">
         <h2>📚 Librarian Dashboard</h2>
         <div className="button-grid">
-          <button onClick={handleApproveClientPatron} className="dash-btn success">✅ Pending Client/Patron</button>
+          <button onClick={handleApprovePatron} className="dash-btn success">✅ Pending Patron</button>
           <button onClick={handleAddBook} className="dash-btn primary">📕 Add Book</button>
           <button onClick={handleManageBooks} className="dash-btn warning">📖 Manage Books</button>
           <button onClick={handleManageBorrowedBooks} className="dash-btn primary">📚 Manage Borrowed Books</button>

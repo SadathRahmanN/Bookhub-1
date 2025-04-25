@@ -27,7 +27,7 @@ const ROUTES = {
 
   // Approvals & Requests
   APPROVE_LIBRARIAN: '/approve-librarian',
-  APPROVE_CLIENT_PATRON: '/approve-client-patron',
+  APPROVE_PATRON: '/approve-patron',
   RETURN_REQUESTS: '/return-requests',
   EXTENSION_REQUESTS: '/extension-requests',
 
