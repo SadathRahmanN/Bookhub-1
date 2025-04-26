@@ -6,7 +6,7 @@ const LibrarianDashboard = () => {
   const navigate = useNavigate();
 
   const handleAddBook = () => navigate('/book-form'); // Add Book page
-  const handleManageBooks = () => navigate('/book-list'); // Manage Books page
+  const handleManageBooks = () => navigate('/book-catalog');// Manage Books page
   const handleApprovePatron = () => navigate('/approve-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');
   const handleManageReturnRequests = () => navigate('/return-requests');
