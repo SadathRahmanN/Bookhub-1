@@ -8,6 +8,7 @@ const BookCatalog = ({ loggedInUser }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [deleteSuccess, setDeleteSuccess] = useState(null);  // New state for delete confirmation
   const navigate = useNavigate();
 
   // Determine role: prefer prop, fallback to localStorage
@@ -51,6 +52,7 @@ const BookCatalog = ({ loggedInUser }) => {
     try {
       await bookAPI.remove(id);
       fetchBooks();
+      setDeleteSuccess('Book deleted successfully!');  // Show success message
     } catch (err) {
       console.error(err);
       setError('Failed to delete book.');
@@ -63,7 +65,7 @@ const BookCatalog = ({ loggedInUser }) => {
   };
 
   if (loading) return <div>Loading books...</div>;
-  if (error)   return <div className="error">{error}</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="book-catalog">
@@ -84,35 +86,42 @@ const BookCatalog = ({ loggedInUser }) => {
         </Link>
       )}
 
+      {/* Show delete success message */}
+      {deleteSuccess && <div className="success-message">{deleteSuccess}</div>}
+
       <div className="book-grid">
-        {filteredBooks.map((book) => (
-          <div key={book.id} className="book-card">
-            <img src={book.image} alt={book.title} />
-            <h3>{book.title}</h3>
-            <p>{book.author}</p>
-            <div className="book-actions">
-              <Link to={`/book-details/${book.id}`} className="view-btn">
-                View
-              </Link>
-              {canManage && (
-                <>
-                  <button
-                    onClick={() => handleEdit(book.id)}
-                    className="edit-btn"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(book.id)}
-                    className="delete-btn"
-                  >
-                    Delete
-                  </button>
-                </>
-              )}
+        {filteredBooks.length === 0 ? (
+          <div>No books found matching your search criteria.</div>  // Message when no books match
+        ) : (
+          filteredBooks.map((book) => (
+            <div key={book.id} className="book-card">
+              <img src={book.image} alt={book.title} />
+              <h3>{book.title}</h3>
+              <p>{book.author}</p>
+              <div className="book-actions">
+                <Link to={`/book-details/${book.id}`} className="view-btn">
+                  View
+                </Link>
+                {canManage && (
+                  <>
+                    <button
+                      onClick={() => handleEdit(book.id)}
+                      className="edit-btn"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(book.id)}
+                      className="delete-btn"
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
