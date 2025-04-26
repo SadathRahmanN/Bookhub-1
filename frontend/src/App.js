@@ -23,6 +23,7 @@ import IssuedBooks from './components/books/shared/IssuedBooks';
 import SearchBooks from './components/books/SearchBooks';
 import UpdateProfile from './components/users/UpdateProfile';
 import BookDetails from './components/books/BookDetails'; // Import BookDetails component
+import BookCatalog from './components/books/BookCatalog'; // Import BookCatalog component
 
 import './App.css';
 
@@ -134,8 +135,11 @@ function App() {
           <Route path={ROUTES.SEARCH_BOOKS} element={<SearchBooks />} />
           <Route path={ROUTES.UPDATE_PROFILE} element={<UpdateProfile />} />
 
+          {/* Book Catalog Route */}
+          <Route path={ROUTES.CATALOG} element={<BookCatalog loggedInUser={loggedInUser} />} />
+
           {/* Book Details Route */}
-          <Route path="/view-book/:id" element={<BookDetails />} />
+          <Route path="/book-details/:id" element={<BookDetails loggedInUser={loggedInUser} />} />
         </Routes>
       </div>
     </Router>

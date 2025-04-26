@@ -1,65 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { bookAPI } from '../../services/api';  // Ensure correct import for the API
-import './BookDetails.css';
+import { useParams, useNavigate } from 'react-router-dom';
+import { bookAPI } from '../../services/api'; // Centralized API import
 
-const BookDetails = () => {
-  const { bookId } = useParams();  // Get bookId from URL params
+const BookDetails = ({ loggedInUser }) => {
+  const { id } = useParams(); // Get the book ID from the URL
   const [book, setBook] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // To navigate after delete or update
 
+  // Fetch the book details by ID
   useEffect(() => {
-    if (!bookId) {
-      setError('Invalid book ID.');
-      setLoading(false);
-      return;
-    }
-
-    console.log("Fetching details for bookId:", bookId);  // Debug log to check the bookId
-
     const fetchBookDetails = async () => {
       try {
-        // Make sure you're using the correct endpoint for fetching book details
-        const response = await bookAPI.get(`/books/${bookId}/`);  // Updated endpoint for fetching book details
-        console.log("API Response:", response);  // Debug log to check the response
-        setBook(response.data);  // Set the book data from the response
+        const response = await bookAPI.get(id); // Assuming this fetches book details
+        setBook(response.data);
       } catch (err) {
-        console.error('Error fetching book details:', err);
         setError('Failed to fetch book details.');
-      } finally {
-        setLoading(false);
       }
     };
-
     fetchBookDetails();
-  }, [bookId]);  // Trigger the effect when the bookId changes
+  }, [id]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  // Handle Delete Book
+  const handleDelete = async () => {
+    try {
+      await bookAPI.delete(id); // Assuming this is the delete API for books
+      navigate('/book-catalog'); // Navigate back to the book catalog after deletion
+    } catch (err) {
+      setError('Failed to delete book.');
+    }
+  };
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+  // Handle Edit Book
+  const handleEdit = () => {
+    navigate(`/book-form/${id}`); // Redirect to the book form for editing
+  };
 
-  if (!book) {
-    return <p>Book data not found.</p>;
-  }
+  if (!book) return <div>Loading book details...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div className="book-details">
       <h2>{book.title}</h2>
-      {book.book_image_url ? (
-        <img src={book.book_image_url} alt={book.title} />
-      ) : (
-        <div className="no-image">No Image</div>
-      )}
+      <img src={book.image} alt={book.title} />
       <p><strong>Author:</strong> {book.author}</p>
-      <p><strong>Description:</strong> {book.description || 'No description available.'}</p>
-      <p><strong>Publisher:</strong> {book.publisher || 'N/A'}</p>
-      <p><strong>ISBN:</strong> {book.isbn || 'N/A'}</p>
-      <p><strong>Available Copies:</strong> {book.available_copies ?? 'N/A'}</p>
+      <p><strong>Category:</strong> {book.category}</p>
+      <p><strong>Description:</strong> {book.description}</p>
+
+      {/* Buttons */}
+      <div className="book-actions">
+        {loggedInUser && (loggedInUser.role === 'Admin' || loggedInUser.role === 'Librarian') && (
+          <>
+            <button onClick={handleEdit} className="edit-btn">Edit</button>
+            <button onClick={handleDelete} className="delete-btn">Delete</button>
+          </>
+        )}
+      </div>
     </div>
   );
 };

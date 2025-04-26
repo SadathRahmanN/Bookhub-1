@@ -1,139 +1,52 @@
-/* Container for the Book List */
 .book-list {
-  padding: 100px 20px 40px;
-  color: #fff;
-  min-height: 100vh;
-  padding-top: 80px;
-  background: #212121; /* Dark background for contrast */
-  text-align: center; /* Center content horizontally */
+  padding: 0 30px;
 }
 
-/* Heading for the books list */
-.book-list h2 {
-  font-size: 2.5rem;
-  margin-bottom: 40px; /* Space before the grid */
-  text-align: center;
-  color: #e0e0e0; /* Light gray for a subtle contrast */
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* Subtle shadow for the text */
-}
-
-/* Book grid container (flexbox for side-by-side layout) */
-.book-grid {
+.book-list-header {
   display: flex;
-  flex-wrap: wrap; /* Allow wrapping if there's not enough space */
-  justify-content: center; /* Center the books horizontally */
-  gap: 30px; /* Increased gap between the cards for better spacing */
-  margin: 0 auto;
-  max-width: 1200px; /* Limit the width of the container */
-}
-
-/* Book card */
-.book-card {
-  background: rgba(240, 240, 240, 0.1);
-  color: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  width: 250px; /* Set width for each book card */
-  text-align: center;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Stronger shadow for better depth */
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
-  overflow: hidden; /* Avoids overflowing content */
-}
-
-.book-card:hover {
-  transform: translateY(-8px); /* Slightly larger hover effect */
-  box-shadow: 0 10px 18px rgba(255, 255, 255, 0.2); /* Lighter shadow on hover */
-  background: rgba(240, 240, 240, 0.2); /* Light background on hover */
-}
-
-/* Book cover image */
-.book-image {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s ease;
-}
-
-.book-image:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
-}
-
-/* Fallback when image is missing */
-.no-image {
-  width: 100%;
-  height: 250px;
-  background-color: #444;
-  color: #ccc;
-  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-style: italic;
-  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.book-list-header input {
+  padding: 10px 15px;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.book-card {
+  background-color: #f8f8f8;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.book-card img {
+  max-width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 8px;
   margin-bottom: 12px;
 }
 
-/* Book title */
 .book-card h3 {
-  font-size: 1.4rem;
-  margin-bottom: 8px;
-  color: #212121; /* Dark color for the title */
+  font-size: 1.1rem;
+  margin: 5px 0;
 }
 
-/* Author name */
 .book-card p {
-  font-size: 1.1rem;
-  color: #616161; /* Lighter color for the author */
-  margin-bottom: 10px;
-}
-
-/* View button */
-.book-actions button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  margin: 5px;
-  width: 100%; /* Make buttons full width */
-}
-
-.book-actions button:hover {
-  background-color: #388e3c;
-  transform: scale(1.05); /* Slight scaling on hover */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Light shadow on hover */
-}
-
-/* Error message */
-.error {
-  text-align: center;
-  color: #ff6b6b;
-  font-size: 1.1rem;
-  margin-top: 20px;
-}
-
-/* Responsiveness */
-@media (max-width: 768px) {
-  .book-grid {
-    justify-content: center; /* Center the books on smaller screens */
-  }
-
-  .book-card {
-    width: 45%; /* Adjust card width on smaller screens */
-  }
-}
-
-@media (max-width: 480px) {
-  .book-card {
-    width: 100%; /* Full width on the smallest screens */
-  }
+  font-size: 0.95rem;
+  color: #555;
 }

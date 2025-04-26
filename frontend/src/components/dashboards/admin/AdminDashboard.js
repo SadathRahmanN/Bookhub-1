@@ -8,7 +8,7 @@ const AdminDashboard = ({ setUserToEdit }) => {
   const handleManageUsers = () => navigate('/user-list');
   const handleAddUser = () => navigate('/user-form');  // Add User page
   const handleAddBook = () => navigate('/book-form'); // Add Book page
-  const handleManageBooks = () => navigate('/book-list'); // Manage Books page
+  const handleManageBooks = () => navigate('/book-catalog');// Manage Books page
   const handleApproveLibrarian = () => navigate('/approve-librarian');
   const handleApprovePatron = () => navigate('/approve-patron');
   const handleManageBorrowedBooks = () => navigate('/borrowed-books');

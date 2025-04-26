@@ -16,6 +16,7 @@ const ROUTES = {
   // Book management
   BOOK_LIST: '/book-list',
   BOOK_FORM: '/book-form',
+  CATALOG: '/book-catalog',
 
   // Borrowing
   BORROW_BOOK: '/borrow-book',
