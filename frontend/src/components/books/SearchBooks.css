@@ -66,3 +66,26 @@
     color: #555;
   }
   
+  .borrow-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50; /* Green */
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .borrow-button:hover {
+    background-color: #45a049; /* Darker green */
+  }
+  
+  .borrow-button:disabled {
+    background-color: #aaa; /* Gray when disabled */
+    cursor: not-allowed;
+  }
+  
