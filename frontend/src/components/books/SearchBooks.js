@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import './SearchBooks.css';
-import { bookAPI, borrowAPI } from '../../services/api'; // Import both bookAPI and borrowAPI
+import { bookAPI, borrowAPI } from '../../services/api';
 
 const SearchBooks = () => {
   const [books, setBooks] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredBooks, setFilteredBooks] = useState([]);
-  const [borrowing, setBorrowing] = useState(false); // Optional: to show loading if needed
+  const [borrowingBookId, setBorrowingBookId] = useState(null); // Track which book is being borrowed
 
   useEffect(() => {
-    // Fetch books on initial load
     const fetchBooks = async () => {
       try {
-        const { data } = await bookAPI.list(); // Fetch all books
-        setBooks(data.books || data);
-        setFilteredBooks(data.books || data);
+        const { data } = await bookAPI.list();
+        const booksData = data.books || data;
+        setBooks(booksData);
+        setFilteredBooks(booksData);
       } catch (error) {
         console.error('There was an error fetching the books!', error);
       }
@@ -23,36 +23,33 @@ const SearchBooks = () => {
     fetchBooks();
   }, []);
 
-  // Handle search input changes
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
-    if (query === '') {
+    if (query.trim() === '') {
       setFilteredBooks(books);
     } else {
       const lowerQuery = query.toLowerCase();
-      setFilteredBooks(
-        books.filter((book) =>
-          book.title.toLowerCase().includes(lowerQuery) ||
-          book.author.toLowerCase().includes(lowerQuery)
-        )
+      const filtered = books.filter((book) =>
+        book.title.toLowerCase().includes(lowerQuery) ||
+        book.author.toLowerCase().includes(lowerQuery)
       );
+      setFilteredBooks(filtered);
     }
   };
 
-  // Actual Borrow Function
   const handleBorrow = async (bookId) => {
     try {
-      setBorrowing(true); // Optional
+      setBorrowingBookId(bookId); // Set the book that's being borrowed
       await borrowAPI.borrow({ book: bookId });
       alert('Book borrowed successfully!');
-      // Optionally refresh list or show borrowed status
+      // Optional: update book list or mark book as borrowed
     } catch (error) {
       console.error('Error borrowing book:', error);
       alert('Failed to borrow the book. Please try again.');
     } finally {
-      setBorrowing(false); // Optional
+      setBorrowingBookId(null); // Reset borrowing state
     }
   };
 
@@ -80,13 +77,12 @@ const SearchBooks = () => {
                 <div className="no-image">No Image</div>
               )}
 
-              {/* Borrow Button under the book picture */}
               <button
                 className="borrow-button"
                 onClick={() => handleBorrow(book.id)}
-                disabled={borrowing} // Disable if currently processing
+                disabled={borrowingBookId === book.id}
               >
-                {borrowing ? 'Borrowing...' : 'Borrow'}
+                {borrowingBookId === book.id ? 'Borrowing...' : 'Borrow'}
               </button>
 
               <h3>{book.title}</h3>
