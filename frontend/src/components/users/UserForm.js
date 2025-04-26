@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './UserForm.css';
 import { userAPI } from '../../services/api'; // Import the userAPI
 
-const UserForm = ({ userToEdit, onSubmit }) => {
+const UserForm = ({ userToEdit, onSubmit, isProfileUpdate = false }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,11 +28,29 @@ const UserForm = ({ userToEdit, onSubmit }) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage('');
-    const newUser = { username, email, password, phone, role };
+
+    // Build the user object to send
+    const newUser = {
+      username,
+      email,
+      phone,
+      role,
+    };
+
+    // Include password only if filled
+    if (password) {
+      newUser.password = password;
+    }
 
     // Basic client-side validation
-    if (!username || !email || !password) {
-      setErrorMessage('Username, Email, and Password are required.');
+    if (!username || !email) {
+      setErrorMessage('Username and Email are required.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!userToEdit && !password) {
+      setErrorMessage('Password is required for creating a new user.');
       setIsLoading(false);
       return;
     }
@@ -40,23 +58,29 @@ const UserForm = ({ userToEdit, onSubmit }) => {
     try {
       let response;
       if (userToEdit) {
-        // Update user if editing
-        response = await userAPI.update(userToEdit.id, newUser); // Use the update API method for PUT request
+        // Update existing user
+        response = await userAPI.update(userToEdit.id, newUser);
       } else {
-        // Create a new user if adding
-        response = await userAPI.create(newUser); // Assuming you have a `create` API method for POST request
+        // Create a new user
+        response = await userAPI.create({ ...newUser, password });
       }
 
       if (response.status === 200 || response.status === 201) {
         if (onSubmit) onSubmit(newUser);
 
-        // Reset form and navigate on success
+        // Reset form on success
         setUsername('');
         setEmail('');
         setPassword('');
         setPhone('');
         setRole('client');
-        navigate('/admin-dashboard');
+
+        // Navigate depending on context
+        if (isProfileUpdate) {
+          navigate('/patron-dashboard'); // If user updates their own profile
+        } else {
+          navigate('/admin-dashboard'); // If admin adds/edits a user
+        }
       } else {
         throw new Error('Failed to submit user data');
       }
@@ -70,7 +94,7 @@ const UserForm = ({ userToEdit, onSubmit }) => {
 
   return (
     <div className="update-profile">
-      <h2>{userToEdit ? 'Edit User' : 'Add User'}</h2>
+      <h2>{userToEdit ? (isProfileUpdate ? 'Update Profile' : 'Edit User') : 'Add User'}</h2>
       <form onSubmit={handleSubmit}>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
@@ -95,12 +119,12 @@ const UserForm = ({ userToEdit, onSubmit }) => {
         </div>
 
         <div className="form-group">
-          <label>Password</label>
+          <label>{userToEdit ? 'New Password (leave blank to keep current)' : 'Password'}</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required={!userToEdit}
+            required={!userToEdit && !isProfileUpdate}
           />
         </div>
 
@@ -113,18 +137,27 @@ const UserForm = ({ userToEdit, onSubmit }) => {
           />
         </div>
 
-        <div className="form-group">
-          <label>Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="client">Client</option>
-            <option value="patron">Patron</option>
-            <option value="librarian">Librarian</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
+        {/* Show Role selection only if NOT a profile update */}
+        {!isProfileUpdate && (
+          <div className="form-group">
+            <label>Role</label>
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="client">Client</option>
+              <option value="patron">Patron</option>
+              <option value="librarian">Librarian</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        )}
 
         <button type="submit" className="update-btn" disabled={isLoading}>
-          {isLoading ? 'Submitting...' : userToEdit ? 'Update User' : 'Add User'}
+          {isLoading
+            ? 'Submitting...'
+            : userToEdit
+            ? isProfileUpdate
+              ? 'Update Profile'
+              : 'Update User'
+            : 'Add User'}
         </button>
       </form>
     </div>
