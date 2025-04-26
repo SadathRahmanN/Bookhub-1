@@ -23,6 +23,8 @@ import UserList from './components/users/UserList';
 import IssuedBooks from './components/books/shared/IssuedBooks';
 import SearchBooks from './components/books/SearchBooks';
 import UpdateProfile from './components/users/UpdateProfile';
+import BookList from './components/books/BookList'; // Adjust the path if necessary
+
 
 import './App.css';
 
@@ -97,8 +99,10 @@ function App() {
                   <div className="left-center"><QuoteSection /></div>
                   <div className="right-center">{renderForm()}</div>
                 </div>
+                
+                {/* Display BookList in the "books" section */}
                 <div id="books" className="section">
-                  <BookCatalog loggedInUser={loggedInUser} />
+                <BookList loggedInUser={loggedInUser} />
                 </div>
                 <div id="about" className="section"><AboutUs /></div>
                 <div id="contact" className="section"><ContactUs /></div>
