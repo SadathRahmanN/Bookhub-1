@@ -11,7 +11,7 @@ const SignUpForm = () => {
     countryCode: '+91',
     phone: '',
     address: '',
-    userType: 'Client',
+    userType: 'Patron',
   });
   const [message, setMessage] = useState({ type: '', text: '' });
   const navigate = useNavigate(); // Initialize navigate
@@ -54,7 +54,7 @@ const SignUpForm = () => {
         countryCode: '+91',
         phone: '',
         address: '',
-        userType: 'Client',
+        userType: 'Patron',
       });
     } catch (err) {
       setMessage({
