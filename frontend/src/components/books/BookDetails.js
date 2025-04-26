@@ -12,9 +12,10 @@ const BookDetails = ({ loggedInUser }) => {
   useEffect(() => {
     const fetchBookDetails = async () => {
       try {
-        const response = await bookAPI.get(id); // Assuming this fetches book details
+        const response = await bookAPI.details(id); // <-- Added slash after id
         setBook(response.data);
       } catch (err) {
+        console.error('Error fetching book details:', err); // Log the error
         setError('Failed to fetch book details.');
       }
     };
@@ -24,9 +25,10 @@ const BookDetails = ({ loggedInUser }) => {
   // Handle Delete Book
   const handleDelete = async () => {
     try {
-      await bookAPI.delete(id); // Assuming this is the delete API for books
+      await bookAPI.delete(`${id}/`); // <-- Added slash after id
       navigate('/book-catalog'); // Navigate back to the book catalog after deletion
     } catch (err) {
+      console.error('Error deleting book:', err); // Log the error
       setError('Failed to delete book.');
     }
   };
@@ -36,13 +38,21 @@ const BookDetails = ({ loggedInUser }) => {
     navigate(`/book-form/${id}`); // Redirect to the book form for editing
   };
 
-  if (!book) return <div>Loading book details...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) return <div>{error}</div>; // Show error first
+  if (!book) return <div>Loading book details...</div>; // Show loading if book not ready
 
   return (
     <div className="book-details">
       <h2>{book.title}</h2>
-      <img src={book.image} alt={book.title} />
+
+      {/* Book Image */}
+      {book.image ? (
+        <img src={book.image} alt={book.title} />
+      ) : (
+        <div className="no-image">No Image Available</div>
+      )}
+
+      {/* Book Information */}
       <p><strong>Author:</strong> {book.author}</p>
       <p><strong>Category:</strong> {book.category}</p>
       <p><strong>Description:</strong> {book.description}</p>

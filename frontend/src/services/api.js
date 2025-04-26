@@ -21,7 +21,8 @@ api.interceptors.request.use(
 
 // ========================= BOOKS API =========================
 export const bookAPI = {
-  list: (params) => api.get('/books/', { params }),                     // GET list of books (with optional search/filter params)
+  list: (params) => api.get('/books/', { params }),
+  getBook: (id) => api.get(`/books/${id}/`),                   // GET list of books (with optional search/filter params)
   details: (id) => api.get(`/books/${id}/`),                            // GET details of a book by ID
   add: (formData) =>
     api.post('/books/', formData, {
