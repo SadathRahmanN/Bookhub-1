@@ -25,7 +25,6 @@ import SearchBooks from './components/books/SearchBooks';
 import UpdateProfile from './components/users/UpdateProfile';
 import BookList from './components/books/BookList'; // Adjust the path if necessary
 
-
 import './App.css';
 
 const AboutUs = () => (
@@ -99,10 +98,10 @@ function App() {
                   <div className="left-center"><QuoteSection /></div>
                   <div className="right-center">{renderForm()}</div>
                 </div>
-                
+
                 {/* Display BookList in the "books" section */}
                 <div id="books" className="section">
-                <BookList loggedInUser={loggedInUser} />
+                  <BookList loggedInUser={loggedInUser} />
                 </div>
                 <div id="about" className="section"><AboutUs /></div>
                 <div id="contact" className="section"><ContactUs /></div>
@@ -136,6 +135,10 @@ function App() {
           {/* Book Management */}
           <Route
             path={ROUTES.BOOK_FORM}
+            element={<BookForm bookToEdit={bookToEdit} onSuccess={() => setBookToEdit(null)} />}
+          />
+          <Route
+            path="/book-form/:id"
             element={<BookForm bookToEdit={bookToEdit} onSuccess={() => setBookToEdit(null)} />}
           />
           <Route

@@ -8,7 +8,8 @@ const BookCatalog = ({ loggedInUser }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [deleteSuccess, setDeleteSuccess] = useState(null);  // New state for delete confirmation
+  const [deleteSuccess, setDeleteSuccess] = useState(null); // New state for delete confirmation
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(''); // For debouncing
   const navigate = useNavigate();
 
   // Determine role: prefer prop, fallback to localStorage
@@ -35,15 +36,19 @@ const BookCatalog = ({ loggedInUser }) => {
     fetchBooks();
   }, [fetchBooks]);
 
-  // Search handler
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-  };
+  // Debounced search handler
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500); // Debounced delay
+
+    return () => clearTimeout(timeoutId); // Cleanup on unmount or new search input
+  }, [searchQuery]);
 
   // Filtered list
   const filteredBooks = books.filter((b) =>
-    b.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    b.author.toLowerCase().includes(searchQuery.toLowerCase())
+    b.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+    b.author.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
   );
 
   // Delete with confirmation
@@ -52,7 +57,7 @@ const BookCatalog = ({ loggedInUser }) => {
     try {
       await bookAPI.remove(id);
       fetchBooks();
-      setDeleteSuccess('Book deleted successfully!');  // Show success message
+      setDeleteSuccess('Book deleted successfully!');
     } catch (err) {
       console.error(err);
       setError('Failed to delete book.');
@@ -76,7 +81,7 @@ const BookCatalog = ({ loggedInUser }) => {
           type="text"
           placeholder="Search by title or author"
           value={searchQuery}
-          onChange={handleSearch}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
       </div>
 
@@ -89,9 +94,12 @@ const BookCatalog = ({ loggedInUser }) => {
       {/* Show delete success message */}
       {deleteSuccess && <div className="success-message">{deleteSuccess}</div>}
 
+      {/* Show error message */}
+      {error && <div className="error-message">{error}</div>}
+
       <div className="book-grid">
         {filteredBooks.length === 0 ? (
-          <div>No books found matching your search criteria.</div>  // Message when no books match
+          <div className="no-books-found">No books found matching your search criteria.</div> // Message when no books match
         ) : (
           filteredBooks.map((book) => (
             <div key={book.id} className="book-card">

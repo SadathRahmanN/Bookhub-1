@@ -25,7 +25,7 @@ export const bookAPI = {
   list: (params) => api.get('/books/', { params }),
 
   // GET book details by ID
-  getBook: (id) => api.get(`/books/${id}/`),
+  get: (id) => api.get(`/books/${id}/`),
 
   // POST a new book with image/file
   add: (formData) =>
