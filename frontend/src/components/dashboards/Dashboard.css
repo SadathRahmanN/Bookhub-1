@@ -1,120 +1,134 @@
+/* Dashboard Main Container */
 .dashboard {
   padding: 100px 20px 40px;
   color: #fff;
   min-height: 100vh;
   background: rgba(0, 0, 0, 0.6);
-  padding-top: 80px; /* Ensure content comes below navbar */
+  padding-top: 80px;
 }
 
+/* Dashboard Heading */
 .dashboard h2 {
-  font-size: 2.2rem;
-  margin-bottom: 20px;
+  font-size: 2.4rem;
+  margin-bottom: 30px;
   text-align: center;
-  color: #f0f0f0; /* Light font color for better contrast */
+  color: #f5f5f5;
 }
 
+/* Dashboard Content Box */
 .dashboard-content {
   max-width: 900px;
   margin: 30px auto;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
 }
 
+/* Dashboard Text */
 .dashboard-content p {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #f0f0f0; /* Light font color */
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #e0e0e0;
 }
 
+/* Logout Button */
 .logout-button {
-  background-color: #ff5c5c;
+  background-color: #ff4d4d;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 1rem;
   float: right;
   margin-bottom: 20px;
   color: white;
+  transition: background-color 0.3s ease;
 }
 
 .logout-button:hover {
-  background-color: #e64545;
+  background-color: #e63946;
 }
 
+/* Dashboard Button Grid */
 .button-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* Center buttons horizontally */
-  align-items: center; /* Center buttons vertically */
-  gap: 1rem;
-  margin-top: 1rem;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 2rem;
 }
 
-.dash-btn {
+/* Dashboard Buttons */
+.dash-btn,
+.pending-list li button {
   padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 8px;
+  font-size: 1rem;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
-  transition: transform 0.2s;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  min-width: 200px;
-  height: 50px; /* Fixed height for all buttons */
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  min-width: 220px;
+  height: 55px;
   text-align: center;
+  font-weight: 600;
 }
 
-.dash-btn:hover {
+/* Hover effect for all buttons */
+.dash-btn:hover,
+.pending-list li button:hover {
   transform: scale(1.05);
 }
 
+/* Button Colors */
 .primary {
-  background-color: #4CAF50;
-  color: white;
+  background-color: #1976d2;
+  color: #ffffff;
 }
 
 .info {
-  background-color: #2196F3;
-  color: white;
+  background-color: #0288d1;
+  color: #ffffff;
 }
 
 .warning {
-  background-color: #ff9800;
-  color: white;
+  background-color: #f9a825;
+  color: #ffffff;
 }
 
 .danger {
-  background-color: #f44336;
-  color: white;
+  background-color: #e53935;
+  color: #ffffff;
 }
 
 .success {
-  background-color: #2e7d32;
-  color: white;
+  background-color: #43a047;
+  color: #ffffff;
 }
 
-/* Approve Librarian & Requests Shared Container Styles */
+/* Approve Librarian and Requests Container */
 .approve-librarian-container {
-  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.7);
   color: white;
-  padding: 30px;
-  border-radius: 10px;
+  padding: 40px;
+  border-radius: 15px;
   width: 90%;
-  max-width: 700px;
-  margin: 100px auto 20px; /* Top margin for navbar spacing */
+  max-width: 750px;
+  margin: 100px auto 20px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .approve-librarian-container h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #2b7a78;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #00bfa5;
 }
 
+/* Pending List */
 .pending-list {
   list-style: none;
   padding: 0;
@@ -125,16 +139,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
   padding: 1rem;
   margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
 .pending-list li:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .pending-list li span {
@@ -142,30 +156,15 @@
   color: #333;
 }
 
-.pending-list li button {
-  padding: 0.5rem 1rem;
-  background-color: #3fb68b;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  height: 50px;  /* Set fixed height for buttons inside the list */
-}
-
-.pending-list li button:hover {
-  background-color: #319b76;
-}
-
-/* Specific: Return & Extension Page Headings if needed */
+/* Specific: Return & Extension Page Headings */
 .return-extension-heading {
   font-size: 2rem;
   margin-bottom: 20px;
-  color: #f0f0f0;
+  color: #f5f5f5;
   text-align: center;
 }
 
-/* Optional: Consistent spacing container for future */
+/* Reusable Container */
 .request-container {
   padding: 20px;
   margin: 20px auto;
